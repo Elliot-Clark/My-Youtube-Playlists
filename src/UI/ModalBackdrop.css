@@ -1,0 +1,17 @@
+.modalBackdrop {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation-name: modalAnimation-loadin;
+    animation-duration: 1.2s;
+}
+
+@keyframes modalAnimation-loadin {
+    from {background-color: rgba(0, 0, 0, 0)}
+    to {background-color: rgba(0, 0, 0, 0.5)}
+  }
+

@@ -1,0 +1,49 @@
+.modal {
+    position: fixed;
+    border-radius: 20px;
+    z-index: 100;
+    background-color: white;
+    width: 70%;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px black;
+    padding: 16px;
+    left: 15%;
+    top: 15%;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+}
+
+.playlistInfo {
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    border-bottom: 5px solid black;
+}
+
+.playlistInfo span {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.modal input {
+    width: 60px;
+    border: 0;
+    padding: 2px;
+    height: 30px;
+    position: relative;
+    top: 20px;
+    font-size: 17px;
+    border: 2px solid black;
+}
+
+.modal input:active {
+    font-size: 15px;
+}
+
+.modal input:focus {
+    box-shadow: 3px 5px 12px #888888;
+    border-radius: 15px;
+}
+
+
+
