@@ -21,29 +21,67 @@ const Modal = (props) => {
         console.log(event.index);
     }
 
-    const playlistVideos = props.playlists.pl1.videoTitles.map( (item, index) => (
-        <li key={index} className="ListItem" onClick={() => clicked({index})}>
-            {item}
-            <p>URL: {props.playlists.pl1.videoURLs[index]}</p>
-        </li>
+    const playlistVideos = props.playlists.videoTitles.map( (item, index) => (
+        <div key={index} className="listVideo" id="active" onClick={() => clicked({index})}>
+            <div className="listTitle">
+                {item}
+            </div>
+            <div className="listInfo">
+                <div className="placeHolder"></div>
+                <div className="listSettings">
+                    <p>Added: 11/11/1111</p>
+                    <p>Start: 0:00</p>
+                    <p>Youtube Link: {props.playlists.videoURLs[index]}</p>
+                    <button>Remove Video</button>
+                </div>
+            </div>
+            <textarea type="text" className="listTextInput" maxlength="2250" placeholder="Type Here..."></textarea>
+        </div>
     ) );
     return (
         <>
-            <div className="modal">
-                <div className="playlistInfo">
-                    <p>Playlist</p>
-                    <span>
-                        <p>Start at:</p>
-                        <input type="text" placeholder="0:00:00" id="timeInput" onBlur={grabTime}></input>
-                    </span>
-                    <p>{props.playlists.pl1.playlistTitle}</p>
-                    <p>Created: {props.playlists.pl1.dateCreated}</p>
-                </div>
+            {props.modal ? 
+                <div className="modal">
+                    <div className="modalTitle">
+                        <p>Username's Playlist</p>
+                    </div>
 
-                <ul>
-                    {playlistVideos}
-                </ul>
-            </div>
+                    <div className="modalInfo">
+                        <ul>
+                            <li>Created: <b>{props.playlists.dateCreated}</b></li>
+                            <li>Viewed: <b>5/2/3121</b></li>
+                            <li>{props.playlists.videoTitles.length === 1 ? 
+                                "1 Video" : 
+                                props.playlists.videoTitles.length + " videos"} 
+                            </li>
+                        </ul>
+                        <div className="playlistName">
+                            <input type="text" id="playlistNameInput" defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
+                            <div id="playlistNameUnderline"></div>
+                        </div>
+                        <div className="shuffle">
+                            <p>Shuffle</p>
+                        </div>
+                        <div className="play">
+                            <p>Play</p>
+                        </div>
+                    </div>
+
+                    <div className="playlistDescription">
+                        <p>Playlist Description:</p>
+                        <textarea type="text" id="playlistDescriptionInput" maxlength="250"></textarea>
+                    </div>
+
+                    <div className="playlistContainer">
+                        {playlistVideos}
+                    </div>
+                    
+
+
+                </div>
+                : ''
+            }
+            
             <ModalBackdrop 
                 modal={props.modal}
                 closeModal={props.closeModal}

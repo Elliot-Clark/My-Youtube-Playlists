@@ -4,31 +4,30 @@ import axios from './axios';
 import VideoFeed from './VideoFeed';
 import fakeData from './Fakedata';
 import LeftBar from './leftbar/LeftBar';
-import Modal from './UI/Modal'
+import Modal from './UI/Modal';
+import SerchBar from './searchbar/SearchBar';
 
 class App extends Component {
   state = {
     videoURL: "",
     signedIn: false,
-    modal: true,
+    modal: false,
 
     userName: "",
     userId: "",
-    lastVisit: "",
     autostart: 1,
     videoWidth: .80,
     videoHeight: .80,
 
     playlists: {
-      pl1: {
-        playlistTitle: "My First Playlist",
-        dateCreated: '5/27/2020',
-        videoTitles: ['a', 'b', 'c'],
-        videoURLs: ['a.com', 'b.com', 'c.com'],
-        videoStartTimes: [ 0, 0, 0],
-        vidoEndTimes: [ 0, 0, 0],
-      }
+      playlistTitle: "My First Playlist",
+      dateCreated: '',
+      videoTitles: [],
+      videoURLs: [],
+      videoStartTimes: [],
     }
+
+    
   }
 
   async dataFetch(userId) {
@@ -43,18 +42,27 @@ class App extends Component {
     } else {
       //New User - Save default data under their ID
       console.log("New user");
-      this.dataPost();
+      this.defaultDataPost();
     }
   }
 
-  dataPost = () => {
-    let defaultPutData = {
+  defaultDataPost = () => {
+    let date = new Date();
+    console.log(date.getMonth() + 1 +'/'+ date.getDate() + '/' + date.getFullYear());
+    let defaultUserData = {
       userName: this.state.userName,
       userId: this.state.userId,
-      autoPlay: this.state.autoplay,
-      setting: "Yes"
+      autostart: this.state.autostart,
     }
-    axios.put('user-data/User' + this.state.userId +'.json', defaultPutData)
+    axios.put('user-data/User' + this.state.userId +'.json', defaultUserData)
+    let defaultUserPlaylistData = {
+      playlistTitle: "My First Playlist",
+      dateCreated: '',
+      videoTitles: [0],
+      videoURLs: [0],
+      videoStartTimes: [1.11, 2, 55],
+    }
+    axios.put('user-data/User' + this.state.userId + '/Playlists.json', defaultUserPlaylistData)
     .then(response => console.log(response))
     .catch(error => console.log(error));
   }
@@ -120,9 +128,26 @@ class App extends Component {
     }
   }
 
+  openModal = () => {
+    this.setState({ modal: true });
+  }
+
   closeModal = () => {
-    console.log("Rufeawe");
     this.setState({ modal: false });
+  }
+
+  changePlaylistTitle = () => {
+    let input = document.getElementById("playlistNameInput").value;
+    this.setState(prevState => ({
+      playlists: {
+        pl1: {
+          ...prevState.playlists.pl1, 
+          playlistTitle: input
+        }
+      }
+    }));
+
+    console.log(this.state.playlists);
   }
 
   render () {
@@ -132,7 +157,10 @@ class App extends Component {
           playlists={this.state.playlists}
           closeModal={this.closeModal}
           modal={this.state.modal}
+          changePlaylistTitle={this.changePlaylistTitle}
         />
+
+        <SerchBar />
         
         <div className="searchBar">
           <input id="searchBar" type="search" placeholder="Search..." size="20" onKeyDown={this.search} onFocus={this.initSearch}></input>
@@ -144,6 +172,7 @@ class App extends Component {
           toggleAutostart={this.toggleAutostart} 
           autostart={this.state.autostart}
           videoURL={this.state.videoURL}
+          openModal={this.openModal}
         />
 
         { this.state.videoURL ? 
