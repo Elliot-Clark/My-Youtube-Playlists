@@ -24,11 +24,12 @@
 .modalTitle p {
     margin: 0;
     padding: 1.5rem;
-    font-size: 1.2rem;
+    font-size: 1.6rem;
 }
 
 .modalInfo {
     display: flex;
+    font-size: 1.3rem;
 }
 
 .modalInfo ul {
