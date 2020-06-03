@@ -15,7 +15,7 @@ class SearchBar extends Component {
     window.gapi.load("client:auth2", function () {
       window.gapi.auth2.init({
         client_id:
-          "919481705400-7p953qn73d595rhqab1eqsid3ph4dbpr.apps.googleusercontent.com",
+          process.env.REACT_APP_CLIENT_ID,
       });
     });
   }
@@ -45,7 +45,7 @@ class SearchBar extends Component {
   };
 
   loadClient = () => {
-    window.gapi.client.setApiKey("AIzaSyC5I9Tv_CUW-WSSMQnMvWfX4J4oSxVjuSk");
+    window.gapi.client.setApiKey(process.env.REACT_APP_API_KEY);
     return window.gapi.client
       .load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
       .then(

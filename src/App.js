@@ -34,16 +34,17 @@ class App extends Component {
       .then((res) => {
         let userNumber = "User" + userId;
         console.log(res.data);
+        console.log(userNumber);
         if (res.data[userNumber]) {
           //Existing User - Data exists under that ID. Set the state with their data
           console.log("Existing User");
           let fetchedUserSettings = res.data[userNumber];
           console.log(this);
-          this.setState({ autostart: fetchedUserSettings.autostart });
+          this.setState({ autostart: fetchedUserSettings.autostart, userId: userId });
         } else {
           //New User - Save default data under their ID
           console.log("New user");
-          this.setState({ userId: userNumber });
+          this.setState({ userId: userId });
           this.defaultDataPost();
         }
       })
@@ -66,10 +67,7 @@ class App extends Component {
       videoStartTimes: [0],
     };
     axios
-      .put(
-        "user-data/User" + this.state.userId + "/Playlists.json",
-        defaultUserPlaylistData
-      )
+      .put("user-data/User" + this.state.userId + "/Playlists.json", defaultUserPlaylistData)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
@@ -111,9 +109,15 @@ class App extends Component {
   addVideo = () => {
     console.log("I b adding");
     if (!this.state.playlists.dateCreated) {
+      //No videos, creating a new playlist
       console.log("No videos. Creating new playlist...");
       let date = new Date();
-    console.log(date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear());
+      date = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+      let test = {
+        dateCreated: date
+      }
+      console.log("user-data/User" + this.state.userId + "/Playlists/dateCreated.json");
+      axios.put("user-data/User" + this.state.userId + "/Playlists.json", test);
     } else {
       console.log("Adding to existing playlist and posting data");
     }
@@ -122,7 +126,6 @@ class App extends Component {
   render() {
     return (
       <>
-
       <button onClick={this.addVideo}>Add Video</button>
 
         <SerchBar
