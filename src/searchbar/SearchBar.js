@@ -5,6 +5,7 @@ import axios from '../axios';
 
 class SearchBar extends Component {
   state = {
+    videoTitle: "",
     videoURL: "",
     signedIn: false,
     userName: "",
@@ -68,8 +69,8 @@ class SearchBar extends Component {
     //     this.setState({ videoURL: response.result.items[0].id.videoId });
     //   },
     //   function(err) { console.error("Execute error", err); });
-    //   this.setState({ videoURL: fakeData.result.items[0].id.videoId });
-      this.props.toggleVideoURL(fakeData.result.items[0].id.videoId);
+    //   this.setState({ videoURL: fakeData.result.items[0].id.videoId, fakeData.result.items[0].snippet.title });
+         this.props.toggleVideo(fakeData.result.items[0].id.videoId, fakeData.result.items[0].snippet.title );
     }
   };
 

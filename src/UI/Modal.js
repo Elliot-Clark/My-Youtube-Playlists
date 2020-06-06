@@ -29,7 +29,7 @@ const Modal = (props) => {
             <div className="listInfo">
                 <div className="placeHolder"></div>
                 <div className="listSettings">
-                    <p>Added: 11/11/1111</p>
+                    <p>Added: {props.dateCreated}</p>
                     <p>Start: 0:00</p>
                     <p>Youtube Link: {props.playlists.videoURLs[index]}</p>
                     <button>Remove Video</button>

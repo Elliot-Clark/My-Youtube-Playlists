@@ -2,19 +2,19 @@ import React, { Component } from "react";
 import "./App.css";
 import axios from "./axios";
 import VideoFeed from "./VideoFeed";
-import fakeData from "./Fakedata";
 import LeftBar from "./leftbar/LeftBar";
 import Modal from "./UI/Modal";
 import SerchBar from "./searchbar/SearchBar";
 
 class App extends Component {
   state = {
-    videoURL: "",
+    videoTitle: "Rick Roll",
+    videoURL: "dQw4w9WgXcQ",
     signedIn: false,
     modal: false,
 
     userName: "",
-    userId: "",
+    userId: "107403535112570513553",
     autostart: 1,
     videoWidth: 0.8,
     videoHeight: 0.8,
@@ -22,8 +22,8 @@ class App extends Component {
     playlists: {
       playlistTitle: "My First Playlist",
       dateCreated: "",
-      videoTitles: ["a"],
-      videoURLs: ["a"],
+      videoTitles: ["0"],
+      videoURLs: ["0"],
       videoStartTimes: [0],
     },
   };
@@ -33,14 +33,17 @@ class App extends Component {
       .get("user-data.json")
       .then((res) => {
         let userNumber = "User" + userId;
-        console.log(res.data);
-        console.log(userNumber);
         if (res.data[userNumber]) {
           //Existing User - Data exists under that ID. Set the state with their data
           console.log("Existing User");
           let fetchedUserSettings = res.data[userNumber];
-          console.log(this);
           this.setState({ autostart: fetchedUserSettings.autostart, userId: userId });
+          this.setState((prevState) => ({
+            playlists: {
+              ...prevState.playlists,
+              dateCreated: res.data[userNumber].Playlists.dateCreated,
+            },
+          }));
         } else {
           //New User - Save default data under their ID
           console.log("New user");
@@ -80,8 +83,9 @@ class App extends Component {
     }
   };
 
-  toggleVideoURL = (URL) => {
-    this.setState({ videoURL: URL })
+  toggleVideo = (URL, Title) => {
+    console.log(Title);
+    this.setState({ videoURL: URL, videoTitle: Title });
   }
 
   openModal = () => {
@@ -96,10 +100,8 @@ class App extends Component {
     let input = document.getElementById("playlistNameInput").value;
     this.setState((prevState) => ({
       playlists: {
-        pl1: {
-          ...prevState.playlists.pl1,
-          playlistTitle: input,
-        },
+        ...prevState.playlists,
+        playlistTitle: input,
       },
     }));
 
@@ -107,34 +109,55 @@ class App extends Component {
   };
 
   addVideo = () => {
-    console.log("I b adding");
     if (!this.state.playlists.dateCreated) {
       //No videos, creating a new playlist
       console.log("No videos. Creating new playlist...");
       let date = new Date();
       date = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
-      let test = {
+      const update = {
         dateCreated: date
       }
-      console.log("user-data/User" + this.state.userId + "/Playlists/dateCreated.json");
-      axios.put("user-data/User" + this.state.userId + "/Playlists.json", test);
+      axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
+      this.setState((prevState) => ({
+        playlists: {
+          ...prevState.playlists,
+          dateCreated: "true",
+        },
+      }));
+      const url = {
+        0: this.state.videoURL
+      }
+      axios.put("user-data/User" + this.state.userId + "/Playlists/videoURLs.json", url);
     } else {
       console.log("Adding to existing playlist and posting data");
+      const count = this.state.playlists.videoURLs.length;
+      let url = {};
+      url[count] = this.state.videoURL;
+      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoURLs.json", url);
+      let newVideoURLs = this.state.playlists.videoURLs.concat(this.state.videoURL);
+      this.setState((prevState) => ({
+        playlists: {
+          ...prevState.playlists,
+          videoURLs: newVideoURLs,
+        },
+      }));
     }
   }
 
   render() {
     return (
       <>
+      {/* Only shows if signed in and videoURL exists */}
       <button onClick={this.addVideo}>Add Video</button>
 
         <SerchBar
           dataFetch={this.dataFetch}
-          toggleVideoURL={this.toggleVideoURL}
+          toggleVideo={this.toggleVideo}
         />
 
         <LeftBar
           toggleAutostart={this.toggleAutostart}
+          dateCreated={this.state.playlists.dateCreated}
           autostart={this.state.autostart}
           videoURL={this.state.videoURL}
           openModal={this.openModal}
@@ -147,7 +170,7 @@ class App extends Component {
           changePlaylistTitle={this.changePlaylistTitle}
         />
 
-        {this.state.videoURL ? (
+        {/* {this.state.videoURL ? (
           <VideoFeed
             videoURL={this.state.videoURL}
             videoWidth={this.state.videoWidth}
@@ -156,7 +179,7 @@ class App extends Component {
           />
         ) : (
           ""
-        )}
+        )} */}
       </>
     );
   }
