@@ -21,23 +21,27 @@ const Modal = (props) => {
         console.log(event.index);
     }
 
-    const playlistVideos = props.playlists.videoTitles.map( (item, index) => (
-        <div key={index} className="listVideo" id="active" onClick={() => clicked({index})}>
-            <div className="listTitle">
-                {item}
-            </div>
-            <div className="listInfo">
-                <div className="placeHolder"></div>
-                <div className="listSettings">
-                    <p>Added: {props.dateCreated}</p>
-                    <p>Start: 0:00</p>
-                    <p>Youtube Link: {props.playlists.videoURLs[index]}</p>
-                    <button>Remove Video</button>
+    const playlistVideos = props.playlists.videoTitles.map((item, index) => {
+        if (item) {
+            return (
+                <div key={index} className="listVideo" id="active" onClick={() => props.removeVideoFromPlaylist(index)}>
+                    <div className="listTitle">
+                        {item}
+                    </div>
+                    <div className="listInfo">
+                        <img className="placeHolder" alt="Youtube Video Thumbnail" src={"https://i.ytimg.com/vi/" + props.playlists.videoURLs[index] + "/mqdefault.jpg"}></img>
+                        <div className="listSettings">
+                            <p>Added: {props.dateCreated}</p>
+                            <p>Start: {props.playlists.videoStartTimes[index]}</p>
+                            <a href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
+                            <button>Remove Video</button>
+                        </div>
+                    </div>
+                    <textarea type="text" className="listTextInput" maxLength="2250" placeholder="Type Here..."></textarea>
                 </div>
-            </div>
-            <textarea type="text" className="listTextInput" maxlength="2250" placeholder="Type Here..."></textarea>
-        </div>
-    ) );
+            )
+        }
+    });
     return (
         <>
             {props.modal ? 
@@ -50,9 +54,9 @@ const Modal = (props) => {
                         <ul>
                             <li>Created: <b>{props.playlists.dateCreated}</b></li>
                             <li>Viewed: <b>5/2/3121</b></li>
-                            <li>{props.playlists.videoTitles.length === 1 ? 
+                            <li>{props.playlists.videoTitles.filter(Boolean).length === 1 ? 
                                 "1 Video" : 
-                                props.playlists.videoTitles.length + " videos"} 
+                                props.playlists.videoTitles.filter(Boolean).length + " Videos"} 
                             </li>
                         </ul>
                         <div className="playlistName">
@@ -69,7 +73,7 @@ const Modal = (props) => {
 
                     <div className="playlistDescription">
                         <p>Playlist Description:</p>
-                        <textarea type="text" id="playlistDescriptionInput" maxlength="250"></textarea>
+                        <textarea type="text" id="playlistDescriptionInput" maxLength="250"></textarea>
                     </div>
 
                     <div className="playlistContainer">

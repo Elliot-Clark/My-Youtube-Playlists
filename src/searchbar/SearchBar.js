@@ -58,7 +58,6 @@ class SearchBar extends Component {
   };
 
   execute = (searchValue) => {
-    console.log(searchValue);
     if (searchValue) {
     //   return window.gapi.client.youtube.search.list({
     //     "part": "snippet",
