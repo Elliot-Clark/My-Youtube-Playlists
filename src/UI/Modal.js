@@ -22,7 +22,7 @@ const Modal = (props) => {
     }
 
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
-        if (item) {
+        if (item && item !== 1) {
             return (
                 <div key={index} className="listVideo" id="active" onClick={() => props.removeVideoFromPlaylist(index)}>
                     <div className="listTitle">
@@ -53,7 +53,6 @@ const Modal = (props) => {
                     <div className="modalInfo">
                         <ul>
                             <li>Created: <b>{props.playlists.dateCreated}</b></li>
-                            <li>Viewed: <b>5/2/3121</b></li>
                             <li>{props.playlists.videoTitles.filter(Boolean).length === 1 ? 
                                 "1 Video" : 
                                 props.playlists.videoTitles.filter(Boolean).length + " Videos"} 

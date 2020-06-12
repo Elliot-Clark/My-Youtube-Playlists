@@ -1,6 +1,5 @@
 import React from 'react';
 import YouTube from 'react-youtube';
-//https://github.com/tjallingt/react-youtube
 
 const VideoFeed = (props) => {
   const ready = () => {

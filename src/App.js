@@ -36,8 +36,8 @@ class App extends Component {
         if (res.data[userNumber]) {
           //Existing User - Database entry exists under that ID. Set the state with their data
           console.log("Existing User");
-          console.log(res.data[userNumber].Playlists.videoTitles);
           let fetchedUserSettings = res.data[userNumber];
+          console.log(res.data[userNumber].Playlists.videoTitles);
           this.setState((prevState) => ({
             autostart: fetchedUserSettings.autostart, 
             userId: userId,
@@ -60,20 +60,29 @@ class App extends Component {
   };
 
   defaultDataPost = () => {
-    let defaultUserData = {
+    const defaultUserData = {
       userName: this.state.userName,
       userId: this.state.userId,
       autostart: this.state.autostart,
     };
     console.log(this.state.userId);
     axios.put("user-data/User" + this.state.userId + ".json", defaultUserData);
-    let defaultUserPlaylistData = {
+    const PLACEHOLDERDATA = 0;
+    const defaultUserPlaylistData = {
       playlistTitle: "My First Playlist",
       dateCreated: "",
-      videoTitles: [0],
-      videoURLs: [0],
-      videoStartTimes: [0],
+      videoTitles: [PLACEHOLDERDATA, PLACEHOLDERDATA],
+      videoURLs: [PLACEHOLDERDATA, PLACEHOLDERDATA],
+      videoStartTimes: [PLACEHOLDERDATA, PLACEHOLDERDATA],
     };
+    this.setState((prevState) => ({
+      playlists: {
+        ...prevState.playlists,
+        videoTitles: [PLACEHOLDERDATA, PLACEHOLDERDATA],
+        videoURLs: [PLACEHOLDERDATA, PLACEHOLDERDATA],
+        videoStartTimes: [PLACEHOLDERDATA, PLACEHOLDERDATA]
+      },
+    }));
     axios
       .put("user-data/User" + this.state.userId + "/Playlists.json", defaultUserPlaylistData)
       .then((response) => console.log(response))
@@ -86,6 +95,10 @@ class App extends Component {
     } else {
       this.setState({ autostart: 1 });
     }
+  };
+
+  toggleSignIn = () => {
+    this.setState({ signedIn: true });
   };
 
   toggleVideo = (URL, Title) => {
@@ -129,40 +142,33 @@ class App extends Component {
           dateCreated: date,
         },
       }));
-      const url = {
-        0: this.state.videoURL
-      }
-      axios.put("user-data/User" + this.state.userId + "/Playlists/videoURLs.json", url);
-      const title = {
-        0: this.state.videoTitle
-      }
-      axios.put("user-data/User" + this.state.userId + "/Playlists/videoTitles.json", title);
-    } else {
-      console.log("Adding to existing playlist and posting data");
-      const count = this.state.playlists.videoURLs.length;
-      let header = {};
-      header[count] = this.state.videoURL;
-      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoURLs.json", header)
-      .then (() => {
-        header[count] = this.state.videoTitle;
-        axios.patch("user-data/User" + this.state.userId + "/Playlists/videoTitles.json", header)
-        .then(() => {
-          header[count] = 0;
-          axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes.json", header);
-        })
+    } 
+    console.log("Adding to existing playlist and posting data");
+    const count = this.state.playlists.videoURLs.length;
+    console.log(count);
+    let header = {};
+    header[count] = this.state.videoURL;
+    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoURLs.json", header)
+    .then (() => {
+      header[count] = this.state.videoTitle;
+      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoTitles.json", header)
+      .then(() => {
+        header[count] = 0;
+        axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes.json", header);
       })
-      .catch((error) => {console.log(error)});
+    })
+    .catch((error) => {console.log(error)});
 
-      let newVideoURLs = this.state.playlists.videoURLs.concat(this.state.videoURL);
-      let newVideoTitles = this.state.playlists.videoTitles.concat(this.state.videoTitle)
-      this.setState((prevState) => ({
-        playlists: {
-          ...prevState.playlists,
-          videoURLs: newVideoURLs,
-          videoTitles: newVideoTitles
-        },
-      }));
-    }
+    let newVideoURLs = this.state.playlists.videoURLs.concat(this.state.videoURL);
+    let newVideoTitles = this.state.playlists.videoTitles.concat(this.state.videoTitle)
+    this.setState((prevState) => ({
+      playlists: {
+        ...prevState.playlists,
+        videoURLs: newVideoURLs,
+        videoTitles: newVideoTitles
+      },
+    }));
+    
   }
 
   removeVideoFromPlaylist = (index) => {
@@ -189,22 +195,31 @@ class App extends Component {
       },
     }));
     console.log(this.state.playlists.videoURLs);
+    if (this.state.playlists.videoURLs.every(element => element === null)) {
+      let a = {
+        dateCreated: ""
+      };
+      axios.put("user-data/User" + this.state.userId + "/Playlists.json", a);
+      this.setState((prevState) => ({
+        playlists: {
+          ...prevState.playlists,
+          dateCreated: ""
+        },
+      }));
+    }
   }
 
   render() {
     return (
       <>
-      {/* Only shows if signed in and videoURL exists */}
-      <button onClick={this.addVideoToPlaylist}>Add Video</button>
-
-      <button onClick={() => console.log(this.state.playlists.videoURLs)}>State</button>
-
         <SerchBar
           dataFetch={this.dataFetch}
           toggleVideo={this.toggleVideo}
+          toggleSignIn={this.toggleSignIn}
         />
 
         <LeftBar
+          signedIn={this.state.signedIn}
           toggleAutostart={this.toggleAutostart}
           dateCreated={this.state.playlists.dateCreated}
           autostart={this.state.autostart}
@@ -221,7 +236,7 @@ class App extends Component {
           removeVideoFromPlaylist={this.removeVideoFromPlaylist}
         />
 
-        {/* {this.state.videoURL ? (
+        {this.state.videoURL ? (
           <VideoFeed
             videoURL={this.state.videoURL}
             videoWidth={this.state.videoWidth}
@@ -230,7 +245,7 @@ class App extends Component {
           />
         ) : (
           ""
-        )} */}
+        )}
       </>
     );
   }

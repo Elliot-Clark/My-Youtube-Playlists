@@ -7,7 +7,6 @@ class SearchBar extends Component {
   state = {
     videoTitle: "",
     videoURL: "",
-    signedIn: false,
     userName: "",
     userId: "",
   };
@@ -31,8 +30,8 @@ class SearchBar extends Component {
           this.setState({
             userName: result.Tt.Bd,
             userId: result.Ea,
-            signedIn: true,
           });
+          this.props.toggleSignIn();
           this.loadClient();
         },
         function (err) {
@@ -59,17 +58,20 @@ class SearchBar extends Component {
 
   execute = (searchValue) => {
     if (searchValue) {
-    //   return window.gapi.client.youtube.search.list({
-    //     "part": "snippet",
-    //     "maxResults": 5,
-    //     "q": searchValue
-    //   })
-    //   .then((response) => {
-    //     this.setState({ videoURL: response.result.items[0].id.videoId });
-    //   },
-    //   function(err) { console.error("Execute error", err); });
-    //   this.setState({ videoURL: fakeData.result.items[0].id.videoId, fakeData.result.items[0].snippet.title });
-         this.props.toggleVideo(fakeData.result.items[0].id.videoId, fakeData.result.items[0].snippet.title );
+      return window.gapi.client.youtube.search.list({
+        "part": "snippet",
+        "maxResults": 5,
+        "q": searchValue
+      })
+      .then((response) => {
+        this.setState({ videoURL: response.result.items[0].id.videoId });
+        this.props.toggleVideo(response.result.items[0].id.videoId, response.result.items[0].snippet.title );
+        //this.setState({ videoURL: response.result.items[0].id.videoId, response.result.items[0].snippet.title });
+      },
+      
+      function(err) { console.error("Execute error", err); });
+      
+         
     }
   };
 
