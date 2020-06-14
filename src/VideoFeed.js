@@ -15,7 +15,9 @@ const VideoFeed = (props) => {
   }
 
   const end = () => {
-    console.log("Ended")
+    console.log("Ended");
+    //Increase playcounter by 1
+    props.playCount();
   }
 
   const error = (err) => {

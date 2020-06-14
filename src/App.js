@@ -12,6 +12,8 @@ class App extends Component {
     videoURL: "",
     signedIn: false,
     modal: false,
+    playCount: 0,
+    playingVideos: [],
 
     userName: "",
     userId: "",
@@ -20,8 +22,9 @@ class App extends Component {
     videoHeight: 0.8,
 
     playlists: {
-      playlistTitle: "My First Playlist",
+      playlistTitle: "My First Playlist...",
       dateCreated: "",
+      playlistDescription: "",
       videoTitles: [],
       videoURLs: [],
       videoStartTimes: [],
@@ -37,13 +40,15 @@ class App extends Component {
           //Existing User - Database entry exists under that ID. Set the state with their data
           console.log("Existing User");
           let fetchedUserSettings = res.data[userNumber];
-          console.log(res.data[userNumber].Playlists.videoTitles);
+          console.log(res.data[userNumber].Playlists.playlistTitle);
           this.setState((prevState) => ({
             autostart: fetchedUserSettings.autostart, 
             userId: userId,
             playlists: {
               ...prevState.playlists,
               dateCreated: res.data[userNumber].Playlists.dateCreated,
+              playlistTitle: res.data[userNumber].Playlists.playlistTitle,
+              playlistDescription: res.data[userNumber].Playlists.playlistDescription,
               videoTitles: res.data[userNumber].Playlists.videoTitles,
               videoURLs: res.data[userNumber].Playlists.videoURLs,
               videoStartTimes: res.data[userNumber].Playlists.videoStartTimes
@@ -71,6 +76,7 @@ class App extends Component {
     const defaultUserPlaylistData = {
       playlistTitle: "My First Playlist",
       dateCreated: "",
+      playlistDescription: "",
       videoTitles: [PLACEHOLDERDATA, PLACEHOLDERDATA],
       videoURLs: [PLACEHOLDERDATA, PLACEHOLDERDATA],
       videoStartTimes: [PLACEHOLDERDATA, PLACEHOLDERDATA],
@@ -102,7 +108,6 @@ class App extends Component {
   };
 
   toggleVideo = (URL, Title) => {
-    console.log(Title);
     this.setState({ videoURL: URL, videoTitle: Title });
   }
 
@@ -115,15 +120,31 @@ class App extends Component {
   };
 
   changePlaylistTitle = () => {
-    let input = document.getElementById("playlistNameInput").value;
+    const input = document.getElementById("playlistNameInput").value;
+    const update = {
+      playlistTitle: input
+    }
+    axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
     this.setState((prevState) => ({
       playlists: {
         ...prevState.playlists,
         playlistTitle: input,
       },
     }));
+  };
 
-    console.log(this.state.playlists);
+  changePlaylistDescription = () => {
+    const input = document.getElementById("playlistDescriptionInput").value;
+    const update = {
+      playlistDescription: input
+    }
+    axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
+    this.setState((prevState) => ({
+      playlists: {
+        ...prevState.playlists,
+        playlistDescription: input,
+      },
+    }));
   };
 
   addVideoToPlaylist = () => {
@@ -209,6 +230,29 @@ class App extends Component {
     }
   }
 
+  playPlaylist = (videoArray) => {
+    //Receive array of URLS to play
+    if (videoArray) {
+      //Executes when the play button is pressed in the playlist menu
+      //Sets the array of upcoming videos, and plays the first one in the list
+      this.setState({ playingVideos: videoArray, videoURL: videoArray[0]});
+      this.closeModal();
+    } else {
+      //Executes at the end of each playlist video
+      this.setState({ videoURL: this.state.playingVideos[this.state.playCount]});
+      this.closeModal();
+    }
+  }
+
+  playCount = () => {
+    this.setState({ playCount: this.state.playCount += 1});
+    this.playPlaylist();
+  }
+
+  resetPlayCount = () => {
+    this.setState({ playCount: 0});
+  }
+
   render() {
     return (
       <>
@@ -216,6 +260,7 @@ class App extends Component {
           dataFetch={this.dataFetch}
           toggleVideo={this.toggleVideo}
           toggleSignIn={this.toggleSignIn}
+          signedIn={this.state.signedIn}
         />
 
         <LeftBar
@@ -230,14 +275,18 @@ class App extends Component {
 
         <Modal
           playlists={this.state.playlists}
+          playPlaylist={this.playPlaylist}
+          resetPlayCount={this.resetPlayCount}
           closeModal={this.closeModal}
           modal={this.state.modal}
           changePlaylistTitle={this.changePlaylistTitle}
+          changePlaylistDescription={this.changePlaylistDescription}
           removeVideoFromPlaylist={this.removeVideoFromPlaylist}
         />
 
         {this.state.videoURL ? (
           <VideoFeed
+            playCount={this.playCount}
             videoURL={this.state.videoURL}
             videoWidth={this.state.videoWidth}
             videoHeight={this.state.videoHeight}

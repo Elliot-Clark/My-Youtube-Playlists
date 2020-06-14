@@ -21,6 +21,13 @@ const Modal = (props) => {
         console.log(event.index);
     }
 
+    const play = () => {
+        //Filters out false values from array
+        const result = props.playlists.videoURLs.filter(ele => ele);
+        props.resetPlayCount();
+        props.playPlaylist(result);
+    }
+
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
         if (item && item !== 1) {
             return (
@@ -33,11 +40,10 @@ const Modal = (props) => {
                         <div className="listSettings">
                             <p>Added: {props.dateCreated}</p>
                             <p>Start: {props.playlists.videoStartTimes[index]}</p>
-                            <a href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
+                            <a target="_blank" rel="noopener noreferrer" href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
                             <button>Remove Video</button>
                         </div>
                     </div>
-                    <textarea type="text" className="listTextInput" maxLength="2250" placeholder="Type Here..."></textarea>
                 </div>
             )
         }
@@ -65,14 +71,14 @@ const Modal = (props) => {
                         <div className="shuffle">
                             <p>Shuffle</p>
                         </div>
-                        <div className="play">
+                        <div className="play" onClick={() => play()}>
                             <p>Play</p>
                         </div>
                     </div>
 
                     <div className="playlistDescription">
                         <p>Playlist Description:</p>
-                        <textarea type="text" id="playlistDescriptionInput" maxLength="250"></textarea>
+                        <textarea type="text" id="playlistDescriptionInput" defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
                     </div>
 
                     <div className="playlistContainer">

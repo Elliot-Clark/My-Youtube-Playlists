@@ -57,22 +57,22 @@ class SearchBar extends Component {
   };
 
   execute = (searchValue) => {
-    if (searchValue) {
-      return window.gapi.client.youtube.search.list({
-        "part": "snippet",
-        "maxResults": 5,
-        "q": searchValue
-      })
-      .then((response) => {
-        this.setState({ videoURL: response.result.items[0].id.videoId });
-        this.props.toggleVideo(response.result.items[0].id.videoId, response.result.items[0].snippet.title );
-        //this.setState({ videoURL: response.result.items[0].id.videoId, response.result.items[0].snippet.title });
-      },
+    // if (searchValue) {
+    //   return window.gapi.client.youtube.search.list({
+    //     "part": "snippet",
+    //     "maxResults": 5,
+    //     "q": searchValue
+    //   })
+    //   .then((response) => {
+    //     this.setState({ videoURL: response.result.items[0].id.videoId });
+    //     this.props.toggleVideo(response.result.items[0].id.videoId, response.result.items[0].snippet.title );
+    //     this.setState({ videoURL: response.result.items[0].id.videoId, response.result.items[0].snippet.title });
+    //   },
       
-      function(err) { console.error("Execute error", err); });
-      
-         
-    }
+    //   function(err) { console.error("Execute error", err); });
+    // }
+      this.props.toggleVideo(fakeData.result.items[0].id.videoId, fakeData.result.items[0].snippet.title);
+
   };
 
   search = (event) => {
@@ -93,8 +93,8 @@ class SearchBar extends Component {
             onFocus={this.initSearch}
           ></input>
           <input type="submit" value="Submit" onClick={this.execute}></input>
-          {this.state.signedIn ? (
-            ""
+          {this.props.signedIn ? (
+            " "
           ) : (
             <button onClick={this.authenticate}>Sign In</button>
           )}
