@@ -1,7 +1,17 @@
 .rightBar {
     border: 2px dotted black;
-    margin: 0;
+    margin: 20px;
     padding: 0;
     width: auto;
     float: right;
+    max-width: 300px;
+    text-align: left;
 }
+
+.rightBar img {
+    width: 180px;
+}
+
+.rightBar li {
+    list-style-type: none;
+} 

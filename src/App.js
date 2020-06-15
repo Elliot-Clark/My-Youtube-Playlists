@@ -15,6 +15,8 @@ class App extends Component {
     modal: false,
     playCount: 0,
     playingVideos: [],
+    searchResultURLs: [],
+    searchResultTitles: [],
 
     userName: "",
     userId: "",
@@ -108,8 +110,17 @@ class App extends Component {
     this.setState({ signedIn: true });
   };
 
-  toggleVideo = (URL, Title) => {
-    this.setState({ videoURL: URL, videoTitle: Title });
+  toggleVideo = (URL, title, searchResultURLs, searchResultTitles) => {
+    console.log(URL, title, searchResultURLs, searchResultTitles);
+    this.setState({ videoURL: URL});
+    if (searchResultURLs) {
+      this.setState({
+        videoTitle: title,
+        searchResultTitles: searchResultTitles,
+        searchResultURLs, searchResultURLs
+      });
+    }
+   
   }
 
   openModal = () => {
@@ -275,9 +286,15 @@ class App extends Component {
           addVideoToPlaylist={this.addVideoToPlaylist}
         />
 
-        <RightBar 
-          
-        />
+        {this.state.searchResultTitles.length ? (
+          <RightBar 
+            searchResultURLs={this.state.searchResultURLs}
+            searchResultTitles={this.state.searchResultTitles}
+            toggleVideo={this.toggleVideo}
+          />
+        ) : (
+          ""
+        )}
 
         <Modal
           playlists={this.state.playlists}

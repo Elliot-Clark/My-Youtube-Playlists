@@ -60,7 +60,7 @@ class SearchBar extends Component {
     // if (searchValue) {
     //   return window.gapi.client.youtube.search.list({
     //     "part": "snippet",
-    //     "maxResults": 5,
+    //     "maxResults": 6,
     //     "q": searchValue
     //   })
     //   .then((response) => {
@@ -71,7 +71,12 @@ class SearchBar extends Component {
       
     //   function(err) { console.error("Execute error", err); });
     // }
-      this.props.toggleVideo(fakeData.result.items[0].id.videoId, fakeData.result.items[0].snippet.title);
+      this.props.toggleVideo(
+        fakeData.result.items[0].id.videoId, 
+        fakeData.result.items[0].snippet.title,
+        [fakeData.result.items[1].id.videoId, fakeData.result.items[2].id.videoId, fakeData.result.items[3].id.videoId, fakeData.result.items[4].id.videoId],
+        [fakeData.result.items[1].snippet.title, fakeData.result.items[2].snippet.title, fakeData.result.items[3].snippet.title, fakeData.result.items[4].snippet.title]
+        );
 
   };
 
