@@ -3,6 +3,7 @@ import "./App.css";
 import axios from "./axios";
 import VideoFeed from "./VideoFeed";
 import LeftBar from "./leftbar/LeftBar";
+import RightBar from "./rightbar/RightBar"
 import Modal from "./UI/Modal";
 import SerchBar from "./searchbar/SearchBar";
 
@@ -256,6 +257,7 @@ class App extends Component {
   render() {
     return (
       <>
+
         <SerchBar
           dataFetch={this.dataFetch}
           toggleVideo={this.toggleVideo}
@@ -271,6 +273,10 @@ class App extends Component {
           videoURL={this.state.videoURL}
           openModal={this.openModal}
           addVideoToPlaylist={this.addVideoToPlaylist}
+        />
+
+        <RightBar 
+          
         />
 
         <Modal
