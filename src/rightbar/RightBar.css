@@ -3,9 +3,11 @@
     margin: 20px;
     padding: 0;
     width: auto;
-    float: right;
-    max-width: 300px;
+    max-width: 200px;
     text-align: left;
+    position: absolute;
+    right: 0;
+    color: green;
 }
 
 .rightBar img {

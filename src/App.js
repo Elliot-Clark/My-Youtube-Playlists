@@ -309,6 +309,7 @@ class App extends Component {
 
         {this.state.videoURL ? (
           <VideoFeed
+            playingVideos={this.state.playingVideos}
             playCount={this.playCount}
             videoURL={this.state.videoURL}
             videoWidth={this.state.videoWidth}

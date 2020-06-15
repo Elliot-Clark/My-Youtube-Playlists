@@ -16,8 +16,11 @@ const VideoFeed = (props) => {
 
   const end = () => {
     console.log("Ended");
-    //Increase playcounter by 1
-    props.playCount();
+    console.log(props);
+    //Increase playcounter by 1 if in playlist playing mode
+    if (props.playingVideos.length) {
+      props.playCount();
+    }
   }
 
   const error = (err) => {
