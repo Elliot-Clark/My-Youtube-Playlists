@@ -21,8 +21,8 @@ class App extends Component {
     userName: "",
     userId: "",
     autostart: 1,
-    videoWidth: 0.8,
-    videoHeight: 0.8,
+    videoWidth: 0.75,
+    videoHeight: 0.75,
 
     playlists: {
       playlistTitle: "My First Playlist...",
@@ -43,7 +43,6 @@ class App extends Component {
           //Existing User - Database entry exists under that ID. Set the state with their data
           console.log("Existing User");
           let fetchedUserSettings = res.data[userNumber];
-          console.log(res.data[userNumber].Playlists.playlistTitle);
           this.setState((prevState) => ({
             autostart: fetchedUserSettings.autostart, 
             userId: userId,
@@ -111,11 +110,13 @@ class App extends Component {
   };
 
   toggleVideo = (URL, title, searchResultURLs, searchResultTitles) => {
-    console.log(URL, title, searchResultURLs, searchResultTitles);
-    this.setState({ videoURL: URL});
+    this.setState({ 
+      videoURL: URL, 
+      videoTitle: title,
+      modal: false
+    });
     if (searchResultURLs) {
       this.setState({
-        videoTitle: title,
         searchResultTitles: searchResultTitles,
         searchResultURLs, searchResultURLs
       });
@@ -161,6 +162,7 @@ class App extends Component {
 
   addVideoToPlaylist = () => {
     if (!this.state.playlists.dateCreated) {
+      
       //No videos, creating a new playlist
       console.log("No videos. Creating new playlist...");
       let date = new Date();
@@ -175,7 +177,13 @@ class App extends Component {
           dateCreated: date,
         },
       }));
+      //Add popup message of video added to playlist
     } 
+    if (this.state.playlists.videoURLs.includes(this.state.videoURL)) {
+      console.log("You already have this video on yo playlist");
+      //Message you no video added
+      return
+    }
     console.log("Adding to existing playlist and posting data");
     const count = this.state.playlists.videoURLs.length;
     console.log(count);
@@ -191,7 +199,6 @@ class App extends Component {
       })
     })
     .catch((error) => {console.log(error)});
-
     let newVideoURLs = this.state.playlists.videoURLs.concat(this.state.videoURL);
     let newVideoTitles = this.state.playlists.videoTitles.concat(this.state.videoTitle)
     this.setState((prevState) => ({
@@ -201,7 +208,7 @@ class App extends Component {
         videoTitles: newVideoTitles
       },
     }));
-    
+    //Message video added to playlist
   }
 
   removeVideoFromPlaylist = (index) => {
@@ -297,6 +304,7 @@ class App extends Component {
         )}
 
         <Modal
+          toggleVideo={this.toggleVideo}
           playlists={this.state.playlists}
           playPlaylist={this.playPlaylist}
           resetPlayCount={this.resetPlayCount}

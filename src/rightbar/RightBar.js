@@ -5,7 +5,7 @@ import '../Fakedata'
 const RightBar = (props) => {
     const searchResults = props.searchResultTitles.map((item, index) => {
         return (
-            <li key={index} className="listVideo" id="active" onClick={() => props.toggleVideo(props.searchResultURLs[index])}>
+            <li key={index} onClick={() => props.toggleVideo(props.searchResultURLs[index], props.searchResultTitles[index])}>
                 <img 
                     src={"https://i.ytimg.com/vi/" + props.searchResultURLs[index] + "/mqdefault.jpg"} 
                     alt="Video Thumbnail">
@@ -18,7 +18,6 @@ const RightBar = (props) => {
     console.log(props.searchResultTitles);
     return (
         <ul className="rightBar">
-        cdacvcv
             {searchResults}
         </ul>
     )

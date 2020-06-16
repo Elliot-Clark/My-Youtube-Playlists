@@ -31,17 +31,22 @@ const Modal = (props) => {
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
         if (item && item !== 1) {
             return (
-                <div key={index} className="listVideo" id="active" onClick={() => props.removeVideoFromPlaylist(index)}>
+                <div key={index} className="listVideo" id="active">
                     <div className="listTitle">
                         {item}
                     </div>
                     <div className="listInfo">
-                        <img className="placeHolder" alt="Youtube Video Thumbnail" src={"https://i.ytimg.com/vi/" + props.playlists.videoURLs[index] + "/mqdefault.jpg"}></img>
+                        <img 
+                            className="placeHolder" 
+                            alt="Youtube Video Thumbnail" 
+                            src={"https://i.ytimg.com/vi/" + props.playlists.videoURLs[index] + "/mqdefault.jpg"}
+                            onClick={() => props.toggleVideo(props.playlists.videoURLs[index], {item})}>
+                        </img>
                         <div className="listSettings">
                             <p>Added: {props.dateCreated}</p>
                             <p>Start: {props.playlists.videoStartTimes[index]}</p>
                             <a target="_blank" rel="noopener noreferrer" href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
-                            <button>Remove Video</button>
+                            <button onClick={() => props.removeVideoFromPlaylist(index)}>Remove Video</button>
                         </div>
                     </div>
                 </div>

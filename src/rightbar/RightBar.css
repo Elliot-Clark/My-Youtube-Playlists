@@ -1,19 +1,28 @@
 .rightBar {
-    border: 2px dotted black;
-    margin: 20px;
-    padding: 0;
-    width: auto;
-    max-width: 200px;
-    text-align: left;
+    border-width: 2px 0px 2px 2px;
+    border-color: white;
+    border-style: solid;
+    margin: 0;
+    padding: 20px;
+    border-radius: 20px 0px 0px 20px;
+    width: 11vw;
     position: absolute;
     right: 0;
-    color: green;
+    top: 10vh;
+    color: white;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .rightBar img {
-    width: 180px;
+    width: 10vw;
+    border-radius: 10px;
 }
 
 .rightBar li {
     list-style-type: none;
+    text-align: center;
+    cursor: pointer;
 } 
