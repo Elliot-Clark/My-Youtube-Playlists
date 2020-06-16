@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './SearchBar.css';
 import fakeData from '../Fakedata';
-import axios from '../axios';
 
 class SearchBar extends Component {
   state = {

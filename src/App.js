@@ -6,6 +6,7 @@ import LeftBar from "./leftbar/LeftBar";
 import RightBar from "./rightbar/RightBar"
 import Modal from "./UI/Modal";
 import SerchBar from "./searchbar/SearchBar";
+import Popup from './UI/PopupMessage'
 
 class App extends Component {
   state = {
@@ -35,8 +36,7 @@ class App extends Component {
   };
 
   dataFetch = (userId) => {
-    const fetch = axios
-      .get("user-data.json")
+    axios.get("user-data.json")
       .then((res) => {
         let userNumber = "User" + userId;
         if (res.data[userNumber]) {
@@ -118,7 +118,7 @@ class App extends Component {
     if (searchResultURLs) {
       this.setState({
         searchResultTitles: searchResultTitles,
-        searchResultURLs, searchResultURLs
+        searchResultURLs: searchResultURLs
       });
     }
    
@@ -264,7 +264,8 @@ class App extends Component {
   }
 
   playCount = () => {
-    this.setState({ playCount: this.state.playCount += 1});
+    let ele = this.state.playCount;
+    this.setState({ playCount: ele += 1});
     this.playPlaylist();
   }
 
@@ -327,6 +328,8 @@ class App extends Component {
         ) : (
           ""
         )}
+
+        <Popup />
       </>
     );
   }

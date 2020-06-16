@@ -17,10 +17,6 @@ const Modal = (props) => {
         }
     }
 
-    const clicked = (event) => {
-        console.log(event.index);
-    }
-
     const play = () => {
         //Filters out false values from array
         const result = props.playlists.videoURLs.filter(ele => ele);
