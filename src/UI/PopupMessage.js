@@ -4,7 +4,7 @@ import './PopupMessage.css';
 const Popup = (props) => {
     return (
         <div className="popup">
-            <p>Video Added to Playlist</p>
+            <p>{props.message}</p>
         </div>
     )
 }

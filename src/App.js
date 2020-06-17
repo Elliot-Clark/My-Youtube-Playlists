@@ -14,6 +14,8 @@ class App extends Component {
     videoURL: "",
     signedIn: false,
     modal: false,
+    message: "",
+    playMessage: true,
     playCount: 0,
     playingVideos: [],
     searchResultURLs: [],
@@ -178,10 +180,12 @@ class App extends Component {
         },
       }));
       //Add popup message of video added to playlist
+      this.showUserMessage("Video Added to Playlist!");
     } 
     if (this.state.playlists.videoURLs.includes(this.state.videoURL)) {
       console.log("You already have this video on yo playlist");
       //Message you no video added
+      this.showUserMessage("Video is already on your Playlist");
       return
     }
     console.log("Adding to existing playlist and posting data");
@@ -209,6 +213,7 @@ class App extends Component {
       },
     }));
     //Message video added to playlist
+    this.showUserMessage("Video Added to Playlist!");
   }
 
   removeVideoFromPlaylist = (index) => {
@@ -234,6 +239,7 @@ class App extends Component {
         videoTitles: c
       },
     }));
+    this.showUserMessage("Video Removed");
     console.log(this.state.playlists.videoURLs);
     if (this.state.playlists.videoURLs.every(element => element === null)) {
       let a = {
@@ -273,9 +279,36 @@ class App extends Component {
     this.setState({ playCount: 0});
   }
 
+  showUserMessage = (text) => {
+    //Sets and shows the message the user sees while preventing user spam
+    let setMessage = () => {
+      this.setState({ message: "", playMessage: true });
+    }
+    if (this.state.playMessage) {
+      this.setState({ message: text, playMessage: false });
+      setTimeout(setMessage, 1600);
+    }
+  }
+
+  test = () => {
+    console.log("lokmhjhg");
+    if (this.state.playMessage) {
+      let adjustVideo = () => {
+        this.setState({ playMessage: true});
+      }
+      this.setState({playMessage: false});
+      setTimeout(adjustVideo, 1600);
+    }
+    
+  }
+
   render() {
+
+    window.onresize = () => this.test();
     return (
       <>
+
+        <button onClick={() => this.showUserMessage("Video!")}>Message</button>
 
         <SerchBar
           dataFetch={this.dataFetch}
@@ -329,7 +362,14 @@ class App extends Component {
           ""
         )}
 
-        <Popup />
+        {this.state.message ? (
+          <Popup 
+            message={this.state.message}
+          />
+        ) : (
+          ""
+        )}
+        
       </>
     );
   }
