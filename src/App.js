@@ -12,6 +12,7 @@ class App extends Component {
   state = {
     videoTitle: "",
     videoURL: "",
+    startTime: 0, 
     signedIn: false,
     modal: false,
     message: "",
@@ -38,24 +39,25 @@ class App extends Component {
   };
 
   dataFetch = (userId) => {
-    axios.get("user-data.json")
+    let userNumber = "User" + userId;
+    axios.get("user-data/" + userNumber + ".json")
       .then((res) => {
-        let userNumber = "User" + userId;
-        if (res.data[userNumber]) {
+        console.log(res.data);
+        if (res.data) {
           //Existing User - Database entry exists under that ID. Set the state with their data
           console.log("Existing User");
-          let fetchedUserSettings = res.data[userNumber];
+          let fetchedUserSettings = res.data;
           this.setState((prevState) => ({
             autostart: fetchedUserSettings.autostart, 
             userId: userId,
             playlists: {
               ...prevState.playlists,
-              dateCreated: res.data[userNumber].Playlists.dateCreated,
-              playlistTitle: res.data[userNumber].Playlists.playlistTitle,
-              playlistDescription: res.data[userNumber].Playlists.playlistDescription,
-              videoTitles: res.data[userNumber].Playlists.videoTitles,
-              videoURLs: res.data[userNumber].Playlists.videoURLs,
-              videoStartTimes: res.data[userNumber].Playlists.videoStartTimes
+              dateCreated: fetchedUserSettings.Playlists.dateCreated,
+              playlistTitle: fetchedUserSettings.Playlists.playlistTitle,
+              playlistDescription: fetchedUserSettings.Playlists.playlistDescription,
+              videoTitles: fetchedUserSettings.Playlists.videoTitles,
+              videoURLs: fetchedUserSettings.Playlists.videoURLs,
+              videoStartTimes: fetchedUserSettings.Playlists.videoStartTimes
             },
           }));
         } else {
@@ -76,21 +78,14 @@ class App extends Component {
     };
     console.log(this.state.userId);
     axios.put("user-data/User" + this.state.userId + ".json", defaultUserData);
-    const PLACEHOLDERDATA = 0;
     const defaultUserPlaylistData = {
       playlistTitle: "My First Playlist",
       dateCreated: "",
       playlistDescription: "",
-      videoTitles: [PLACEHOLDERDATA, PLACEHOLDERDATA],
-      videoURLs: [PLACEHOLDERDATA, PLACEHOLDERDATA],
-      videoStartTimes: [PLACEHOLDERDATA, PLACEHOLDERDATA],
     };
     this.setState((prevState) => ({
       playlists: {
         ...prevState.playlists,
-        videoTitles: [PLACEHOLDERDATA, PLACEHOLDERDATA],
-        videoURLs: [PLACEHOLDERDATA, PLACEHOLDERDATA],
-        videoStartTimes: [PLACEHOLDERDATA, PLACEHOLDERDATA]
       },
     }));
     axios
@@ -111,10 +106,11 @@ class App extends Component {
     this.setState({ signedIn: true });
   };
 
-  toggleVideo = (URL, title, searchResultURLs, searchResultTitles) => {
+  toggleVideo = (URL, title, startTime, searchResultURLs, searchResultTitles) => {
     this.setState({ 
       videoURL: URL, 
       videoTitle: title,
+      startTime: startTime,
       modal: false
     });
     if (searchResultURLs) {
@@ -170,21 +166,22 @@ class App extends Component {
       let date = new Date();
       date = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
       const update = {
-        dateCreated: date
+        dateCreated: date,
+        playlistDescription: "",
+        playlistTitle: "My First Playlist"
       }
       axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
       this.setState((prevState) => ({
         playlists: {
           ...prevState.playlists,
           dateCreated: date,
+          playlistDescription: "",
+          playlistTitle: "My First Playlist"
         },
       }));
-      //Add popup message of video added to playlist
       this.showUserMessage("Video Added to Playlist!");
     } 
     if (this.state.playlists.videoURLs.includes(this.state.videoURL)) {
-      console.log("You already have this video on yo playlist");
-      //Message you no video added
       this.showUserMessage("Video is already on your Playlist");
       return
     }
@@ -212,7 +209,6 @@ class App extends Component {
         videoTitles: newVideoTitles
       },
     }));
-    //Message video added to playlist
     this.showUserMessage("Video Added to Playlist!");
   }
 
@@ -220,16 +216,17 @@ class App extends Component {
     console.log(index);
     console.log(this.state.playlists);
     console.log(this.state.playlists.videoURLs);
-    axios.delete("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/" + index + ".json");
-    axios.delete("user-data/User" + this.state.userId + "/Playlists/videoTitles/" + index + ".json");
-    axios.delete("user-data/User" + this.state.userId + "/Playlists/videoURLs/" + index + ".json");
-    console.log(index);
+    const remove = {}, removeIndex = index;
+    remove[removeIndex] = 0;
+    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", remove);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoTitles/.json", remove);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoURLs/.json", remove);
     let a = this.state.playlists.videoStartTimes;
-    a.splice(index, 1, null);
     let b = this.state.playlists.videoURLs;
-    b.splice(index, 1, null);
     let c = this.state.playlists.videoTitles;
-    c.splice(index, 1, null);
+    a.splice(index, 1, 0);
+    b.splice(index, 1, 0);
+    c.splice(index, 1, 0);
 
     this.setState((prevState) => ({
       playlists: {
@@ -302,13 +299,12 @@ class App extends Component {
     
   }
 
+
   render() {
 
     window.onresize = () => this.test();
     return (
       <>
-
-        <button onClick={() => this.showUserMessage("Video!")}>Message</button>
 
         <SerchBar
           dataFetch={this.dataFetch}
@@ -354,6 +350,7 @@ class App extends Component {
             playingVideos={this.state.playingVideos}
             playCount={this.playCount}
             videoURL={this.state.videoURL}
+            startTime={this.state.startTime}
             videoWidth={this.state.videoWidth}
             videoHeight={this.state.videoHeight}
             autostart={this.state.autostart}

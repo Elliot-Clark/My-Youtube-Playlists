@@ -5,15 +5,48 @@ import ModalBackdrop from './ModalBackdrop';
 
 const Modal = (props) => {
 
-    const grabTime = () => {
-        const inputValue = document.getElementById('timeInput');
-        inputValue.onblur = (e) => {
-            console.log(inputValue.value);
-            if (inputValue.value >= 0 || inputValue.value === ':' ) {
-                console.log("Convert!");
+    const convertTime = () => {
+    //Converts inputted MM:SS time into a seconds for Youtube to understand
+    //If the user enters a > 60 second value, that works too
+        let inputValue = document.getElementById('timeInput');
+        let a = inputValue.value.split(":");
+        const notANumber = () => {
+            inputValue.value = ""
+            inputValue.placeholder = "NaN"
+        }
+        if (a.length == 2) {
+            let time = parseInt(a[0] * 60 + parseInt(a[1]));
+            console.log(parseInt(a[1]));
+            if (isNaN(time)) {
+                notANumber();
             } else {
-                
+                console.log("Storing " + time + " in database");
             }
+        } else {
+            let time = parseInt(a[0]);
+            console.log(time);
+            if (isNaN(time)) {
+                console.log("Running");
+                notANumber();
+            } else {
+                console.log("Storing " + time + " in database");
+            }
+        }
+
+        
+    }
+
+    const unconvertTime = (ele) => {
+        //Convert start time fetched from database into MM:SS format. 90 becomes 1:30
+        return (Math.floor( ele / 60) + ':' + ele % 60);
+    }
+
+    const reg = /^[\d :]+$/;
+    const check = (event) => {
+        if (!reg.test(event.target.value)) {
+            let b = document.getElementById('timeInput').value.split('');
+            b.pop();
+            document.getElementById('timeInput').value = b.join('');
         }
     }
 
@@ -25,7 +58,7 @@ const Modal = (props) => {
     }
 
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
-        if (item && item !== 1) {
+        if (item) {
             return (
                 <div key={index} className="listVideo" id="active">
                     <div className="listTitle">
@@ -33,14 +66,14 @@ const Modal = (props) => {
                     </div>
                     <div className="listInfo">
                         <img 
-                            className="placeHolder" 
+                            className="thumbnail" 
                             alt="Youtube Video Thumbnail" 
                             src={"https://i.ytimg.com/vi/" + props.playlists.videoURLs[index] + "/mqdefault.jpg"}
-                            onClick={() => props.toggleVideo(props.playlists.videoURLs[index], {item})}>
+                            onClick={() => props.toggleVideo(props.playlists.videoURLs[index],  {item}, props.playlists.videoStartTimes[index])}>
                         </img>
                         <div className="listSettings">
                             <p>Added: {props.dateCreated}</p>
-                            <p>Start: {props.playlists.videoStartTimes[index]}</p>
+                            <p>Start at: <input type="text" maxLength="5" id="timeInput" onKeyUp={check} onBlur={convertTime} placeholder={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
                             <a target="_blank" rel="noopener noreferrer" href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
                             <button onClick={() => props.removeVideoFromPlaylist(index)}>Remove Video</button>
                         </div>

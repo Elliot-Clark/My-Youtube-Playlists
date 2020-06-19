@@ -26,8 +26,7 @@ const VideoFeed = (props) => {
   const error = (err) => {
     console.log(err)
   }
-
-  console.log(window.innerWidth);
+  
   let videoWidth = window.innerWidth * props.videoWidth;
   let videoHeight = window.innerHeight * props.videoHeight;  
 
@@ -35,10 +34,12 @@ const VideoFeed = (props) => {
     height: videoHeight,
     width: videoWidth,
     playerVars: {
+      start: props.startTime,
       autoplay: props.autostart,
     },
   };
 
+  console.log(props.videoURL);
     return (
       <div className="video">
         <YouTube 

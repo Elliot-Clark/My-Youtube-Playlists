@@ -15,7 +15,6 @@ const RightBar = (props) => {
             </li>
         )
     });
-    console.log(props.searchResultTitles);
     return (
         <ul className="rightBar">
             {searchResults}

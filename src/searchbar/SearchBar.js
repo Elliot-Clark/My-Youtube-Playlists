@@ -25,9 +25,10 @@ class SearchBar extends Component {
       .signIn({ scope: "https://www.googleapis.com/auth/youtube.force-ssl" })
       .then(
         (result) => {
+          console.log(result);
           this.props.dataFetch(result.Ea);
           this.setState({
-            userName: result.Tt.Bd,
+            userName: result.Qt.Bd,
             userId: result.Ea,
           });
           this.props.toggleSignIn();

@@ -148,8 +148,8 @@
     justify-content: space-evenly;
 }
 
-.placeHolder {
-    width: 180px;
+.thumbnail {
+    width: 50%;
     height: 120px;
     background-color: blue;
     margin: 5%;
@@ -159,6 +159,11 @@
     margin: 10px;
     text-align: left;
 
+}
+
+.listSettings input {
+    width: 60px;
+    text-align: center;
 }
 
 .listTextInput {
