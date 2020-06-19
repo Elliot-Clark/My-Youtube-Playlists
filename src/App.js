@@ -213,9 +213,6 @@ class App extends Component {
   }
 
   removeVideoFromPlaylist = (index) => {
-    console.log(index);
-    console.log(this.state.playlists);
-    console.log(this.state.playlists.videoURLs);
     const remove = {}, removeIndex = index;
     remove[removeIndex] = 0;
     axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", remove);
@@ -249,6 +246,26 @@ class App extends Component {
           dateCreated: ""
         },
       }));
+    }
+  }
+
+  changePlaylistStartTime = (index, time) => {
+    //Stores the start times in the database, if it is different from the one already stored for it
+    if (this.state.playlists.videoStartTimes[index] !== time) {
+      const remove = {}, removeIndex = index;
+      remove[removeIndex] = time;
+      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", remove);
+      let a = this.state.playlists.videoStartTimes;
+      a.splice(index, 1, time);
+      this.setState((prevState) => ({
+        playlists: {
+          ...prevState.playlists,
+          videoStartTimes: a,
+        },
+      }));
+    } else {
+      console.log("Repeat value");
+      return
     }
   }
 
@@ -340,6 +357,7 @@ class App extends Component {
           resetPlayCount={this.resetPlayCount}
           closeModal={this.closeModal}
           modal={this.state.modal}
+          changePlaylistStartTime={this.changePlaylistStartTime}
           changePlaylistTitle={this.changePlaylistTitle}
           changePlaylistDescription={this.changePlaylistDescription}
           removeVideoFromPlaylist={this.removeVideoFromPlaylist}

@@ -5,10 +5,13 @@ import ModalBackdrop from './ModalBackdrop';
 
 const Modal = (props) => {
 
-    const convertTime = () => {
-    //Converts inputted MM:SS time into a seconds for Youtube to understand
-    //If the user enters a > 60 second value, that works too
+    const convertTime = (index) => {
+        //Converts inputted MM:SS time into a seconds for Youtube to understand
+        //If the user enters a > 60 second value, that works too
         let inputValue = document.getElementById('timeInput');
+        if (inputValue.value == "") {
+            return
+        }
         let a = inputValue.value.split(":");
         const notANumber = () => {
             inputValue.value = ""
@@ -20,16 +23,16 @@ const Modal = (props) => {
             if (isNaN(time)) {
                 notANumber();
             } else {
-                console.log("Storing " + time + " in database");
+                props.changePlaylistStartTime(index.index, time);
             }
         } else {
             let time = parseInt(a[0]);
             console.log(time);
             if (isNaN(time)) {
-                console.log("Running");
                 notANumber();
             } else {
                 console.log("Storing " + time + " in database");
+                props.changePlaylistStartTime(index.index, time);
             }
         }
 
@@ -38,7 +41,15 @@ const Modal = (props) => {
 
     const unconvertTime = (ele) => {
         //Convert start time fetched from database into MM:SS format. 90 becomes 1:30
-        return (Math.floor( ele / 60) + ':' + ele % 60);
+        let minutes = Math.floor( ele / 60);
+        let seconds;
+        if (ele % 60 < 10 ) {
+            //If seconds are only one digit, add a 0 in front of them
+            seconds = "0" + ele
+        } else {
+            seconds = ele % 60;
+        }
+        return (minutes + ':' + seconds);
     }
 
     const reg = /^[\d :]+$/;
@@ -73,7 +84,7 @@ const Modal = (props) => {
                         </img>
                         <div className="listSettings">
                             <p>Added: {props.dateCreated}</p>
-                            <p>Start at: <input type="text" maxLength="5" id="timeInput" onKeyUp={check} onBlur={convertTime} placeholder={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
+                            <p>Start at: <input type="text" maxLength="5" id="timeInput" onKeyUp={check} onBlur={() => convertTime({index})} defaultValue={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
                             <a target="_blank" rel="noopener noreferrer" href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
                             <button onClick={() => props.removeVideoFromPlaylist(index)}>Remove Video</button>
                         </div>
