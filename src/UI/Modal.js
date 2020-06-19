@@ -45,14 +45,14 @@ const Modal = (props) => {
         let seconds;
         if (ele % 60 < 10 ) {
             //If seconds are only one digit, add a 0 in front of them
-            seconds = "0" + ele
+            seconds = "0" + ele % 60
         } else {
             seconds = ele % 60;
         }
-        return (minutes + ':' + seconds);
+        return minutes + ':' + seconds;
     }
 
-    const reg = /^[\d :]+$/;
+    const reg = /^[\d:]+$/;
     const check = (event) => {
         if (!reg.test(event.target.value)) {
             let b = document.getElementById('timeInput').value.split('');

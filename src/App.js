@@ -252,9 +252,9 @@ class App extends Component {
   changePlaylistStartTime = (index, time) => {
     //Stores the start times in the database, if it is different from the one already stored for it
     if (this.state.playlists.videoStartTimes[index] !== time) {
-      const remove = {}, removeIndex = index;
-      remove[removeIndex] = time;
-      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", remove);
+      const change = {}, changeIndex = index;
+      change[changeIndex] = time;
+      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", change);
       let a = this.state.playlists.videoStartTimes;
       a.splice(index, 1, time);
       this.setState((prevState) => ({
