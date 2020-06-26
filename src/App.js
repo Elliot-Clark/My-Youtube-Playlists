@@ -25,8 +25,8 @@ class App extends Component {
     userName: "",
     userId: "",
     autostart: 1,
-    videoWidth: 0.75,
-    videoHeight: 0.75,
+    videoWidth: 0.70,
+    videoHeight: 0.70,
 
     playlists: {
       playlistTitle: "My First Playlist...",
@@ -107,9 +107,11 @@ class App extends Component {
   };
 
   toggleVideo = (URL, title, startTime, searchResultURLs, searchResultTitles) => {
+    //The main function to play a video
+    console.log(title.item);
     this.setState({ 
       videoURL: URL, 
-      videoTitle: title,
+      videoTitle: title.item,
       startTime: startTime,
       modal: false
     });
@@ -200,13 +202,17 @@ class App extends Component {
       })
     })
     .catch((error) => {console.log(error)});
+    console.log(this.state.playlists.videoStartTimes);
     let newVideoURLs = this.state.playlists.videoURLs.concat(this.state.videoURL);
-    let newVideoTitles = this.state.playlists.videoTitles.concat(this.state.videoTitle)
+    let newVideoTitles = this.state.playlists.videoTitles.concat(this.state.videoTitle);
+    let newVideoStartTimes = this.state.playlists.videoStartTimes;
+    newVideoStartTimes.push('0');
     this.setState((prevState) => ({
       playlists: {
         ...prevState.playlists,
         videoURLs: newVideoURLs,
-        videoTitles: newVideoTitles
+        videoTitles: newVideoTitles,
+        videoStartTimes: newVideoStartTimes
       },
     }));
     this.showUserMessage("Video Added to Playlist!");
@@ -250,6 +256,7 @@ class App extends Component {
   }
 
   changePlaylistStartTime = (index, time) => {
+    console.log(index, time);
     //Stores the start times in the database, if it is different from the one already stored for it
     if (this.state.playlists.videoStartTimes[index] !== time) {
       const change = {}, changeIndex = index;
@@ -271,21 +278,27 @@ class App extends Component {
 
   playPlaylist = (videoArray) => {
     //Receive array of URLS to play
+    let a = this.state.playlists.videoStartTimes.filter(ele => ele);
+    console.log(videoArray);
     if (videoArray) {
       //Executes when the play button is pressed in the playlist menu
       //Sets the array of upcoming videos, and plays the first one in the list
-      this.setState({ playingVideos: videoArray, videoURL: videoArray[0]});
+      this.setState({ playingVideos: videoArray, videoURL: videoArray[0], startTime: a[0]});
       this.closeModal();
     } else {
       //Executes at the end of each playlist video
-      this.setState({ videoURL: this.state.playingVideos[this.state.playCount]});
+      this.setState({ videoURL: this.state.playingVideos[this.state.playCount], startTime: a[this.state.playCount]});
       this.closeModal();
     }
   }
 
   playCount = () => {
-    let ele = this.state.playCount;
-    this.setState({ playCount: ele += 1});
+    this.setState({ playCount: this.state.playCount +=1});
+    this.playPlaylist();
+  }
+
+  reversePlayCount = () => {
+    this.setState({ playCount: this.state.playCount -=1});
     this.playPlaylist();
   }
 
@@ -304,24 +317,14 @@ class App extends Component {
     }
   }
 
-  test = () => {
-    console.log("lokmhjhg");
-    if (this.state.playMessage) {
-      let adjustVideo = () => {
-        this.setState({ playMessage: true});
-      }
-      this.setState({playMessage: false});
-      setTimeout(adjustVideo, 1600);
-    }
-    
-  }
-
-
   render() {
-
-    window.onresize = () => this.test();
     return (
       <>
+
+        <button onClick={this.reversePlayCount}>Previous</button>
+        <button onClick={this.playCount}>Next</button>
+
+        <div>{this.state.videoTitle}</div>
 
         <SerchBar
           dataFetch={this.dataFetch}

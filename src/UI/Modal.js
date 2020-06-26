@@ -8,8 +8,8 @@ const Modal = (props) => {
     const convertTime = (index) => {
         //Converts inputted MM:SS time into a seconds for Youtube to understand
         //If the user enters a > 60 second value, that works too
-        let inputValue = document.getElementById('timeInput');
-        if (inputValue.value == "") {
+        let inputValue = document.getElementById(index.index);
+        if (inputValue.value === "") {
             return
         }
         let a = inputValue.value.split(":");
@@ -17,7 +17,7 @@ const Modal = (props) => {
             inputValue.value = ""
             inputValue.placeholder = "NaN"
         }
-        if (a.length == 2) {
+        if (a.length === 2) {
             let time = parseInt(a[0] * 60 + parseInt(a[1]));
             console.log(parseInt(a[1]));
             if (isNaN(time)) {
@@ -84,7 +84,7 @@ const Modal = (props) => {
                         </img>
                         <div className="listSettings">
                             <p>Added: {props.dateCreated}</p>
-                            <p>Start at: <input type="text" maxLength="5" id="timeInput" onKeyUp={check} onBlur={() => convertTime({index})} defaultValue={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
+                            <p>Start at: <input type="text" maxLength="5" id={index} onKeyUp={check} onBlur={() => convertTime({index})} defaultValue={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
                             <a target="_blank" rel="noopener noreferrer" href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
                             <button onClick={() => props.removeVideoFromPlaylist(index)}>Remove Video</button>
                         </div>

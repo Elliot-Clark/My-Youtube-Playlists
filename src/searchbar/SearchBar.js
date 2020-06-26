@@ -57,27 +57,30 @@ class SearchBar extends Component {
   };
 
   execute = (searchValue) => {
-    // if (searchValue) {
-    //   return window.gapi.client.youtube.search.list({
-    //     "part": "snippet",
-    //     "maxResults": 6,
-    //     "q": searchValue
-    //   })
-    //   .then((response) => {
-    //     this.setState({ videoURL: response.result.items[0].id.videoId });
-    //     this.props.toggleVideo(response.result.items[0].id.videoId, response.result.items[0].snippet.title );
-    //     this.setState({ videoURL: response.result.items[0].id.videoId, response.result.items[0].snippet.title });
-    //   },
-      
-    //   function(err) { console.error("Execute error", err); });
-    // }
-      this.props.toggleVideo(
-        fakeData.result.items[0].id.videoId, 
-        fakeData.result.items[0].snippet.title,
-        [fakeData.result.items[1].id.videoId, fakeData.result.items[2].id.videoId, fakeData.result.items[3].id.videoId, fakeData.result.items[4].id.videoId],
-        [fakeData.result.items[1].snippet.title, fakeData.result.items[2].snippet.title, fakeData.result.items[3].snippet.title, fakeData.result.items[4].snippet.title]
+    if (searchValue) {
+      return window.gapi.client.youtube.search.list({
+        "part": "snippet",
+        "maxResults": 6,
+        "q": searchValue
+      })
+      .then((response) => {
+        console.log(response);
+        let ytSearch = response.result.items[0];
+        //Youtube API searchs can sometimes return nonvideos as the first result. Usually channels with no videoID
+        //This will filter out that first result if that is the case.
+        if (!ytSearch.id.videoId) {
+          ytSearch = response.result.items[1];
+        }
+        this.props.toggleVideo(
+          ytSearch.id.videoId, 
+          ytSearch.snippet.title,
+          null,
+          [response.result.items[1].id.videoId, response.result.items[2].id.videoId, response.result.items[3].id.videoId, response.result.items[4].id.videoId],
+          [response.result.items[1].snippet.title, response.result.items[2].snippet.title, response.result.items[3].snippet.title, response.result.items[4].snippet.title]
         );
-
+      },
+      function(err) { console.error("Execute error", err); });
+    }
   };
 
   search = (event) => {

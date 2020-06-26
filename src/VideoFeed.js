@@ -3,20 +3,19 @@ import YouTube from 'react-youtube';
 
 const VideoFeed = (props) => {
   const ready = () => {
-    console.log("Ready")
+    //console.log("Ready")
   }
 
   const play = () => {
-    console.log("Playing");
+    //console.log("Playing");
   }
 
   const pause = () => {
-    console.log("Paused")
+    //console.log("Paused")
   }
 
   const end = () => {
     console.log("Ended");
-    console.log(props);
     //Increase playcounter by 1 if in playlist playing mode
     if (props.playingVideos.length) {
       props.playCount();
@@ -39,7 +38,6 @@ const VideoFeed = (props) => {
     },
   };
 
-  console.log(props.videoURL);
     return (
       <div className="video">
         <YouTube 
