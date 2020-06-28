@@ -19,7 +19,6 @@ const Modal = (props) => {
         }
         if (a.length === 2) {
             let time = parseInt(a[0] * 60 + parseInt(a[1]));
-            console.log(parseInt(a[1]));
             if (isNaN(time)) {
                 notANumber();
             } else {
@@ -27,11 +26,9 @@ const Modal = (props) => {
             }
         } else {
             let time = parseInt(a[0]);
-            console.log(time);
             if (isNaN(time)) {
                 notANumber();
             } else {
-                console.log("Storing " + time + " in database");
                 props.changePlaylistStartTime(index.index, time);
             }
         }
@@ -53,19 +50,20 @@ const Modal = (props) => {
     }
 
     const reg = /^[\d:]+$/;
-    const check = (event) => {
+    const check = (event, index) => {
         if (!reg.test(event.target.value)) {
-            let b = document.getElementById('timeInput').value.split('');
-            b.pop();
-            document.getElementById('timeInput').value = b.join('');
+            let input = document.getElementById(index).value.split('');
+            input.pop();
+            document.getElementById(index).value = input.join('');
         }
     }
 
     const play = () => {
         //Filters out false values from array
-        const result = props.playlists.videoURLs.filter(ele => ele);
+        const URLs = props.playlists.videoURLs.filter(ele => ele);
+        const Titles = props.playlists.videoTitles.filter(ele => ele);
         props.resetPlayCount();
-        props.playPlaylist(result);
+        props.playPlaylist(URLs, Titles);
     }
 
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
@@ -83,8 +81,7 @@ const Modal = (props) => {
                             onClick={() => props.toggleVideo(props.playlists.videoURLs[index],  {item}, props.playlists.videoStartTimes[index])}>
                         </img>
                         <div className="listSettings">
-                            <p>Added: {props.dateCreated}</p>
-                            <p>Start at: <input type="text" maxLength="5" id={index} onKeyUp={check} onBlur={() => convertTime({index})} defaultValue={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
+                            <p>Start at: <input type="text" maxLength="5" id={index} onKeyUp={(event) => check(event, index)} onBlur={() => convertTime({index})} defaultValue={unconvertTime(props.playlists.videoStartTimes[index])}></input></p>
                             <a target="_blank" rel="noopener noreferrer" href={"https://www.youtube.com/watch?v=" + props.playlists.videoURLs[index]}>Youtube Link</a>
                             <button onClick={() => props.removeVideoFromPlaylist(index)}>Remove Video</button>
                         </div>
@@ -98,7 +95,7 @@ const Modal = (props) => {
             {props.modal ? 
                 <div className="modal">
                     <div className="modalTitle">
-                        <p>Username's Playlist</p>
+                        <p>My Playlist</p>
                     </div>
 
                     <div className="modalInfo">

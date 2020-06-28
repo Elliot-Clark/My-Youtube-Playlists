@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './SearchBar.css';
-import fakeData from '../Fakedata';
 
 class SearchBar extends Component {
   state = {
@@ -71,12 +70,16 @@ class SearchBar extends Component {
         if (!ytSearch.id.videoId) {
           ytSearch = response.result.items[1];
         }
+        const convertText = (text) => {
+          //The Youtube API tends to return certain strings with special characters. This function converts it back to normal
+          return text.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        }
         this.props.toggleVideo(
           ytSearch.id.videoId, 
-          ytSearch.snippet.title,
+          convertText(ytSearch.snippet.title),
           null,
           [response.result.items[1].id.videoId, response.result.items[2].id.videoId, response.result.items[3].id.videoId, response.result.items[4].id.videoId],
-          [response.result.items[1].snippet.title, response.result.items[2].snippet.title, response.result.items[3].snippet.title, response.result.items[4].snippet.title]
+          [convertText(response.result.items[1].snippet.title), convertText(response.result.items[2].snippet.title), convertText(response.result.items[3].snippet.title), convertText(response.result.items[4].snippet.title)]
         );
       },
       function(err) { console.error("Execute error", err); });

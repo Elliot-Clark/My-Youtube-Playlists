@@ -19,6 +19,8 @@ class App extends Component {
     playMessage: true,
     playCount: 0,
     playingVideos: [],
+    playingVideosTitles: [],
+    loopPlaylist: true,
     searchResultURLs: [],
     searchResultTitles: [],
 
@@ -45,24 +47,30 @@ class App extends Component {
         console.log(res.data);
         if (res.data) {
           //Existing User - Database entry exists under that ID. Set the state with their data
-          console.log("Existing User");
-          let fetchedUserSettings = res.data;
+          let fetchedUserSettings = res.data.Playlists;
           this.setState((prevState) => ({
-            autostart: fetchedUserSettings.autostart, 
+            autostart: res.data.autostart, 
             userId: userId,
             playlists: {
               ...prevState.playlists,
-              dateCreated: fetchedUserSettings.Playlists.dateCreated,
-              playlistTitle: fetchedUserSettings.Playlists.playlistTitle,
-              playlistDescription: fetchedUserSettings.Playlists.playlistDescription,
-              videoTitles: fetchedUserSettings.Playlists.videoTitles,
-              videoURLs: fetchedUserSettings.Playlists.videoURLs,
-              videoStartTimes: fetchedUserSettings.Playlists.videoStartTimes
+              dateCreated: fetchedUserSettings.dateCreated,
+              playlistTitle: fetchedUserSettings.playlistTitle,
+              playlistDescription: fetchedUserSettings.playlistDescription,
             },
           }));
+          if (fetchedUserSettings.videoTitles) {
+            //For if the user is existing but has no added videos yet. Don't want to add undefined to the state
+            this.setState((prevState) => ({
+              playlists: {
+                ...prevState.playlists,
+                videoTitles: fetchedUserSettings.videoTitles,
+                videoURLs: fetchedUserSettings.videoURLs,
+                videoStartTimes: fetchedUserSettings.videoStartTimes
+              },
+            }));
+          }
         } else {
           //New User - Save default data under their ID
-          console.log("New user");
           this.setState({ userId: userId });
           this.defaultDataPost();
         }
@@ -95,6 +103,7 @@ class App extends Component {
   };
 
   toggleAutostart = () => {
+    console.log("Autostart");
     if (this.state.autostart) {
       this.setState({ autostart: 0 });
     } else {
@@ -108,11 +117,17 @@ class App extends Component {
 
   toggleVideo = (URL, title, startTime, searchResultURLs, searchResultTitles) => {
     //The main function to play a video
-    console.log(title.item);
+    let tmp = title;
+    if (title.item) {
+      tmp = title.item;
+    }
+    console.log(title);
     this.setState({ 
       videoURL: URL, 
-      videoTitle: title.item,
+      videoTitle: tmp,
       startTime: startTime,
+      playingVideos: [],
+      playingVideosTitles: [],
       modal: false
     });
     if (searchResultURLs) {
@@ -202,7 +217,6 @@ class App extends Component {
       })
     })
     .catch((error) => {console.log(error)});
-    console.log(this.state.playlists.videoStartTimes);
     let newVideoURLs = this.state.playlists.videoURLs.concat(this.state.videoURL);
     let newVideoTitles = this.state.playlists.videoTitles.concat(this.state.videoTitle);
     let newVideoStartTimes = this.state.playlists.videoStartTimes;
@@ -276,23 +290,39 @@ class App extends Component {
     }
   }
 
-  playPlaylist = (videoArray) => {
+  playPlaylist = (videoArray, videoTitles) => {
     //Receive array of URLS to play
     let a = this.state.playlists.videoStartTimes.filter(ele => ele);
-    console.log(videoArray);
     if (videoArray) {
       //Executes when the play button is pressed in the playlist menu
       //Sets the array of upcoming videos, and plays the first one in the list
-      this.setState({ playingVideos: videoArray, videoURL: videoArray[0], startTime: a[0]});
+      this.setState({ 
+        playingVideos: videoArray, 
+        playingVideosTitles: videoTitles,  
+        videoURL: videoArray[0],
+        videoTitle: videoTitles[0],
+        startTime: a[0]});
       this.closeModal();
     } else {
       //Executes at the end of each playlist video
-      this.setState({ videoURL: this.state.playingVideos[this.state.playCount], startTime: a[this.state.playCount]});
+      this.setState({ 
+        videoURL: this.state.playingVideos[this.state.playCount],
+        videoTitle: this.state.playingVideosTitles[this.state.playCount], 
+        startTime: a[this.state.playCount]
+      });
+      console.log(this.state.playCount);
       this.closeModal();
     }
   }
 
   playCount = () => {
+    if (this.state.playCount == this.state.playingVideos.length -1 && this.state.loopPlaylist) {
+      console.log("Running");
+      this.setState({ playCount: 0 });
+      console.log(this.state.playCount);
+      this.playPlaylist();
+      return
+    }
     this.setState({ playCount: this.state.playCount +=1});
     this.playPlaylist();
   }
@@ -318,11 +348,17 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <>
 
-        <button onClick={this.reversePlayCount}>Previous</button>
-        <button onClick={this.playCount}>Next</button>
+        {this.state.playingVideos.length && this.state.videoURL ? 
+          (<button onClick={this.reversePlayCount}>Previous</button>) : ''
+        }
+
+        {this.state.playingVideos.length && this.state.videoURL ? 
+          (<button onClick={this.playCount}>Next</button>) : ''
+        }
 
         <div>{this.state.videoTitle}</div>
 
@@ -343,7 +379,7 @@ class App extends Component {
           addVideoToPlaylist={this.addVideoToPlaylist}
         />
 
-        {this.state.searchResultTitles.length ? (
+        {this.state.searchResultTitles.length && !this.state.playingVideos.length ?  (
           <RightBar 
             searchResultURLs={this.state.searchResultURLs}
             searchResultTitles={this.state.searchResultTitles}
