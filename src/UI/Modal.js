@@ -58,10 +58,19 @@ const Modal = (props) => {
         }
     }
 
-    const play = () => {
+    const play = (event) => {
         //Filters out false values from array
         const URLs = props.playlists.videoURLs.filter(ele => ele);
         const Titles = props.playlists.videoTitles.filter(ele => ele);
+        if (event) {
+            //If shuffle was clicked, plays the videos in a random order
+            //This function randomizes the order of both URL and Titles arrays in the same exact way. Doesn't even need to make another array!
+            for (let arrayLength = URLs.length; arrayLength > 0; arrayLength--) {
+                let spliceIndex = Math.floor(Math.random() * (arrayLength));
+                URLs.push(URLs.splice(spliceIndex, 1).toString());
+                Titles.push(Titles.splice(spliceIndex, 1).toString());
+            }
+        }
         props.resetPlayCount();
         props.playPlaylist(URLs, Titles);
     }
@@ -110,11 +119,14 @@ const Modal = (props) => {
                             <input type="text" id="playlistNameInput" defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
                             <div id="playlistNameUnderline"></div>
                         </div>
-                        <div className="shuffle">
+                        <div className="shuffle" onClick={(event) => play(event)}>
                             <p>Shuffle</p>
                         </div>
                         <div className="play" onClick={() => play()}>
                             <p>Play</p>
+                        </div>
+                        <div className="loop">
+                            <button onClick={() => props.toggleLoop()}>Loop</button>
                         </div>
                     </div>
 

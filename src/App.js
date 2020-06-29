@@ -103,7 +103,6 @@ class App extends Component {
   };
 
   toggleAutostart = () => {
-    console.log("Autostart");
     if (this.state.autostart) {
       this.setState({ autostart: 0 });
     } else {
@@ -137,6 +136,15 @@ class App extends Component {
       });
     }
    
+  }
+
+  toggleLoop = () => {
+    console.log("Lfefafaw");
+    if (this.state.loopPlaylist) {
+      this.setState({ loopPlaylist: 0 });
+    } else {
+      this.setState({ loopPlaylist: 1 });
+    }
   }
 
   openModal = () => {
@@ -291,6 +299,7 @@ class App extends Component {
   }
 
   playPlaylist = (videoArray, videoTitles) => {
+    console.log(videoTitles);
     //Receive array of URLS to play
     let a = this.state.playlists.videoStartTimes.filter(ele => ele);
     if (videoArray) {
@@ -317,10 +326,10 @@ class App extends Component {
 
   playCount = () => {
     if (this.state.playCount == this.state.playingVideos.length -1 && this.state.loopPlaylist) {
-      console.log("Running");
-      this.setState({ playCount: 0 });
-      console.log(this.state.playCount);
-      this.playPlaylist();
+      console.log("Loop Running");
+      this.setState({ playCount: 0 }, () => {
+        this.playPlaylist();
+      });
       return
     }
     this.setState({ playCount: this.state.playCount +=1});
@@ -348,7 +357,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <>
 
@@ -391,6 +399,7 @@ class App extends Component {
 
         <Modal
           toggleVideo={this.toggleVideo}
+          toggleLoop={this.toggleLoop}
           playlists={this.state.playlists}
           playPlaylist={this.playPlaylist}
           resetPlayCount={this.resetPlayCount}
