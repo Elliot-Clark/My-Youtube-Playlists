@@ -12,6 +12,7 @@
     transition: all 0.3s ease-out;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 30px;
     margin-bottom: 50px;
+    color: black;
 }
 
 .modalTitle {

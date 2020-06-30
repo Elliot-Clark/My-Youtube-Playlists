@@ -4,6 +4,7 @@ import axios from "./axios";
 import VideoFeed from "./VideoFeed";
 import LeftBar from "./leftbar/LeftBar";
 import RightBar from "./rightbar/RightBar"
+import BottomBar from "./bottombar/BottomBar"
 import Modal from "./UI/Modal";
 import SerchBar from "./searchbar/SearchBar";
 import Popup from './UI/PopupMessage'
@@ -104,8 +105,16 @@ class App extends Component {
 
   toggleAutostart = () => {
     if (this.state.autostart) {
+      const update = {
+        autostart: 0
+      }
+      axios.patch("user-data/User" + this.state.userId + ".json", update);
       this.setState({ autostart: 0 });
     } else {
+      const update = {
+        autostart: 1
+      }
+      axios.patch("user-data/User" + this.state.userId + ".json", update);
       this.setState({ autostart: 1 });
     }
   };
@@ -310,8 +319,9 @@ class App extends Component {
         playingVideosTitles: videoTitles,  
         videoURL: videoArray[0],
         videoTitle: videoTitles[0],
-        startTime: a[0]});
-      this.closeModal();
+        startTime: a[0],
+        modal: false,
+      })
     } else {
       //Executes at the end of each playlist video
       this.setState({ 
@@ -320,7 +330,6 @@ class App extends Component {
         startTime: a[this.state.playCount]
       });
       console.log(this.state.playCount);
-      this.closeModal();
     }
   }
 
@@ -360,15 +369,17 @@ class App extends Component {
     return (
       <>
 
-        {this.state.playingVideos.length && this.state.videoURL ? 
-          (<button onClick={this.reversePlayCount}>Previous</button>) : ''
-        }
+        <div className="background"></div>
 
-        {this.state.playingVideos.length && this.state.videoURL ? 
-          (<button onClick={this.playCount}>Next</button>) : ''
-        }
+        <BottomBar 
+          playingVideos={this.state.playingVideos}
+          videoURL={this.state.videoURL}
+          reversePlayCount={this.reversePlayCount}
+          playCount={this.playCount}
+          videoTitle={this.state.videoTitle}
+        />
 
-        <div>{this.state.videoTitle}</div>
+        
 
         <SerchBar
           dataFetch={this.dataFetch}

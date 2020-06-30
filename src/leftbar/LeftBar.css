@@ -1,6 +1,23 @@
 .leftBar {
-    border: 2px dotted black;
     margin: 0;
     padding: 0;
-
+    background-color: white;
+    margin-left: 1%;
+    display: flex;
+    -webkit-flex-direction: column; 
+    flex-direction: column;
+    position: absolute;
+    top: 20%;
 }
+
+.disabled {
+    opacity: .5;
+    cursor: default !important;
+}
+
+.leftBar button {
+    height: 80px;
+    cursor: pointer;
+    width: 80px;
+}
+

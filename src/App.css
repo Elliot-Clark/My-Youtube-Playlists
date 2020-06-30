@@ -7,12 +7,16 @@ html, body {
 
 body {
   font-family: Verdana,sans-serif;
-  background-color: #141920;
+  /* background-color: #141920; */
 }
 
-/* * {
-  border: 1px solid black;
-} */
+.background {
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient( black, #141920);
+  position: absolute;
+  z-index: -999;
+}
 
 .searchBar input {
   margin: 30px;
@@ -27,13 +31,4 @@ button {
 
 .video {
   text-align: center;
-}
-
-.leftBar {
-  display: flex;
-  -webkit-flex-direction: column; 
-  flex-direction: column;
-  position: absolute;
-  text-align: right;
-  top: 40%;
 }
