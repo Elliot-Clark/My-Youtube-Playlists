@@ -1,6 +1,6 @@
 .rightBar {
     border-width: 2px 0px 2px 2px;
-    border-color: white;
+    border-color: green;
     border-style: solid;
     margin: 0;
     padding: 20px;
@@ -9,8 +9,8 @@
     position: absolute;
     right: 0;
     top: 10vh;
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;

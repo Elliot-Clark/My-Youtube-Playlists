@@ -8,7 +8,7 @@ const BottomBar = (props) => {
             (<button id="previous" onClick={props.reversePlayCount}>Previous</button>) : ''
             }
 
-            <div>{props.videoTitle}</div>
+            <div id="title">{props.videoTitle}</div>
 
             {props.playingVideos.length && props.videoURL ? 
             (<button id="next" onClick={props.playCount}>Next</button>) : ''

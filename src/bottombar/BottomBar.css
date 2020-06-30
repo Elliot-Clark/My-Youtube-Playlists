@@ -8,7 +8,7 @@
     bottom: 20px;
     height: 5rem;
     left: 15%;
-    background-color: green;
+    background-color: white;
     font-size: 1.3rem;
 }
 
@@ -18,11 +18,17 @@
     border-radius: 20px;
     position: absolute;
     bottom: -.3rem;
-    width: 100px;
+    width: 10%;
 }
 
 #previous {
     left: 0;
+}
+
+#title {
+    width: 80%;
+    line-height: 2rem;
+    color: black;
 }
 
 #next {

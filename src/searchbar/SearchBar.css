@@ -1,4 +1,16 @@
-#searchBar {
+.searchBar {
+    background-color: white;
+    width: 70%;
+    height: 8vh;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 0 auto;
+}
+
+#search {
+    height: 40px;
+    width: 300px;
     padding: .25rem .75rem;
     color: #cbd5e0;
     background-color: #141920;

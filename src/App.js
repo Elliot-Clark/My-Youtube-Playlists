@@ -334,19 +334,21 @@ class App extends Component {
   }
 
   playCount = () => {
-    if (this.state.playCount == this.state.playingVideos.length -1 && this.state.loopPlaylist) {
+    if (this.state.playCount === this.state.playingVideos.length -1 && this.state.loopPlaylist) {
       console.log("Loop Running");
       this.setState({ playCount: 0 }, () => {
         this.playPlaylist();
       });
       return
     }
-    this.setState({ playCount: this.state.playCount +=1});
+    let ele = this.state.playCount
+    this.setState({ playCount: ele +=1});
     this.playPlaylist();
   }
 
   reversePlayCount = () => {
-    this.setState({ playCount: this.state.playCount -=1});
+    let ele = this.state.playCount;
+    this.setState({ playCount: ele -=1});
     this.playPlaylist();
   }
 

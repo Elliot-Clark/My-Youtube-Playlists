@@ -88,7 +88,7 @@ class SearchBar extends Component {
 
   search = (event) => {
     if (event.key === "Enter") {
-      this.execute(document.getElementById("searchBar").value);
+      this.execute(document.getElementById("search").value);
     }
   };
   render() {
@@ -96,7 +96,7 @@ class SearchBar extends Component {
       <>
         <div className="searchBar">
           <input
-            id="searchBar"
+            id="search"
             type="search"
             placeholder="Search..."
             size="20"
