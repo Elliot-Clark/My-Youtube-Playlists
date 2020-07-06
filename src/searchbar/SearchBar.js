@@ -55,7 +55,8 @@ class SearchBar extends Component {
       );
   };
 
-  execute = (searchValue) => {
+  execute = () => {
+    const searchValue = document.getElementById("search").value;
     if (searchValue) {
       return window.gapi.client.youtube.search.list({
         "part": "snippet",
@@ -88,13 +89,22 @@ class SearchBar extends Component {
 
   search = (event) => {
     if (event.key === "Enter") {
-      this.execute(document.getElementById("search").value);
+      this.execute();
     }
   };
   render() {
     return (
       <>
         <div className="searchBar">
+
+          <img 
+            id="siteLogo"
+            src="/My-Youtube-Playlists.png" 
+            onMouseOver={ele => (ele.currentTarget.src = "/My-Youtube-Playlists.gif")} 
+            onMouseOut={ele => (ele.currentTarget.src = "/My-Youtube-Playlists.png")} 
+            alt="My Youtube Playlists Logo">
+          </img>
+
           <input
             id="search"
             type="search"
@@ -103,13 +113,15 @@ class SearchBar extends Component {
             onKeyDown={this.search}
             onFocus={this.initSearch}
           ></input>
-          <input type="submit" value="Submit" onClick={this.execute}></input>
+          <button type="submit" value="Submit" onClick={this.execute}>Search</button>
+
           {this.props.signedIn ? (
             " "
           ) : (
-            <button onClick={this.authenticate}>Sign In</button>
+            <button id="signIn" onClick={this.authenticate}>Sign In</button>
           )}
         </div>
+
       </>
     );
   }

@@ -21,6 +21,7 @@ class App extends Component {
     playCount: 0,
     playingVideos: [],
     playingVideosTitles: [],
+    playingVideosStartTime: [],
     loopPlaylist: true,
     searchResultURLs: [],
     searchResultTitles: [],
@@ -28,8 +29,8 @@ class App extends Component {
     userName: "",
     userId: "",
     autostart: 1,
-    videoWidth: 0.70,
-    videoHeight: 0.70,
+    videoWidth: 0.75,
+    videoHeight: 0.75,
 
     playlists: {
       playlistTitle: "My First Playlist...",
@@ -105,17 +106,21 @@ class App extends Component {
 
   toggleAutostart = () => {
     if (this.state.autostart) {
-      const update = {
-        autostart: 0
-      }
-      axios.patch("user-data/User" + this.state.userId + ".json", update);
       this.setState({ autostart: 0 });
-    } else {
-      const update = {
-        autostart: 1
+      if (this.state.signedIn) {
+        const update = {
+          autostart: 0
+        }
+        axios.patch("user-data/User" + this.state.userId + ".json", update);
       }
-      axios.patch("user-data/User" + this.state.userId + ".json", update);
+    } else {
       this.setState({ autostart: 1 });
+      if (this.state.signedIn) {
+        const update = {
+          autostart: 1
+        }
+        axios.patch("user-data/User" + this.state.userId + ".json", update);
+      }
     }
   };
 
@@ -125,14 +130,14 @@ class App extends Component {
 
   toggleVideo = (URL, title, startTime, searchResultURLs, searchResultTitles) => {
     //The main function to play a video
-    let tmp = title;
+    let titleCheck = title;
     if (title.item) {
-      tmp = title.item;
+      titleCheck = title.item;
     }
     console.log(title);
     this.setState({ 
       videoURL: URL, 
-      videoTitle: tmp,
+      videoTitle: titleCheck,
       startTime: startTime,
       playingVideos: [],
       playingVideosTitles: [],
@@ -307,19 +312,19 @@ class App extends Component {
     }
   }
 
-  playPlaylist = (videoArray, videoTitles) => {
-    console.log(videoTitles);
+  playPlaylist = (videoArray, videoTitles, startTimes) => {
+    console.log(startTimes);
     //Receive array of URLS to play
-    let a = this.state.playlists.videoStartTimes.filter(ele => ele);
     if (videoArray) {
       //Executes when the play button is pressed in the playlist menu
       //Sets the array of upcoming videos, and plays the first one in the list
       this.setState({ 
         playingVideos: videoArray, 
         playingVideosTitles: videoTitles,  
+        playingVideosStartTime: startTimes,
         videoURL: videoArray[0],
         videoTitle: videoTitles[0],
-        startTime: a[0],
+        startTime: startTimes[0],
         modal: false,
       })
     } else {
@@ -327,7 +332,7 @@ class App extends Component {
       this.setState({ 
         videoURL: this.state.playingVideos[this.state.playCount],
         videoTitle: this.state.playingVideosTitles[this.state.playCount], 
-        startTime: a[this.state.playCount]
+        startTime: this.state.playingVideosStartTime[this.state.playCount]
       });
       console.log(this.state.playCount);
     }
@@ -342,14 +347,16 @@ class App extends Component {
       return
     }
     let ele = this.state.playCount
-    this.setState({ playCount: ele +=1});
-    this.playPlaylist();
+    this.setState({ playCount: ele +=1}, () => {
+      this.playPlaylist()
+    }); 
   }
 
   reversePlayCount = () => {
     let ele = this.state.playCount;
-    this.setState({ playCount: ele -=1});
-    this.playPlaylist();
+    this.setState({ playCount: ele -=1}, () => {
+      this.playPlaylist()
+    });
   }
 
   resetPlayCount = () => {
@@ -378,6 +385,7 @@ class App extends Component {
           videoURL={this.state.videoURL}
           reversePlayCount={this.reversePlayCount}
           playCount={this.playCount}
+          playCountState={this.state.playCount}
           videoTitle={this.state.videoTitle}
         />
 
@@ -397,6 +405,7 @@ class App extends Component {
           autostart={this.state.autostart}
           videoURL={this.state.videoURL}
           openModal={this.openModal}
+          playingVideos={this.state.playingVideos}
           addVideoToPlaylist={this.addVideoToPlaylist}
         />
 
@@ -412,6 +421,7 @@ class App extends Component {
 
         <Modal
           toggleVideo={this.toggleVideo}
+          looping={this.state.loopPlaylist}
           toggleLoop={this.toggleLoop}
           playlists={this.state.playlists}
           playPlaylist={this.playPlaylist}

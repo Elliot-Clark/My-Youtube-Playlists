@@ -4,14 +4,40 @@ import './BottomBar.css';
 const BottomBar = (props) => {
     return (
         <div className="bottomBar">
-            {props.playingVideos.length && props.videoURL ? 
-            (<button id="previous" onClick={props.reversePlayCount}>Previous</button>) : ''
+            {props.playCountState >= 1 && props.videoURL ? 
+            (<img 
+                src="/Play-Animation.png" 
+                className="previous" 
+                onClick={props.reversePlayCount} 
+                onMouseOver={ele => (ele.currentTarget.src = "/Play-Animation.gif")} 
+                onMouseOut={ele => (ele.currentTarget.src = "/Play-Animation.png")} 
+                alt="Play Button">
+            </img>) :
+            (<img 
+                src="/Play-Animation.png" 
+                className="previous"
+                style={{visibility: "hidden"}}
+                alt="Play Button">
+            </img>)
             }
 
             <div id="title">{props.videoTitle}</div>
 
             {props.playingVideos.length && props.videoURL ? 
-            (<button id="next" onClick={props.playCount}>Next</button>) : ''
+            (<img 
+                src="/Play-Animation.png" 
+                className="next" 
+                onClick={props.playCount} 
+                onMouseOver={ele => (ele.currentTarget.src = "/Play-Animation.gif")} 
+                onMouseOut={ele => (ele.currentTarget.src = "/Play-Animation.png")} 
+                alt="Play Button">
+            </img>) :
+            (<img 
+                src="/Play-Animation.png" 
+                className="next"
+                style={{visibility: "hidden"}}
+                alt="Play Button">
+            </img>)
             }
         </div>
     )

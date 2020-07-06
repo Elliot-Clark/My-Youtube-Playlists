@@ -1,17 +1,63 @@
 .searchBar {
-    background-color: white;
+    background-color: #2f2e2f;
     width: 70%;
-    height: 8vh;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-content: center;
     margin: 0 auto;
+    border-radius: 0px 0px 20px 20px;
 }
 
 #search {
     height: 40px;
-    width: 300px;
+    width: 20vw;
+    max-width: 300px;
     padding: .25rem .75rem;
     color: #cbd5e0;
     background-color: #141920;
+    position: relative;
+    top: 10px;
+    border-radius: 50px;
+    outline: none;
+    background: url(/search.svg) no-repeat right center;
+}
+
+#searchIcon {
+    position: absolute;
+    width: 100px;
+    z-index: 999;
+}
+
+.searchBar button {
+    height: 40px;
+    position: relative;
+    background-color: #666666;
+    box-shadow: 0px 2px 0px 2px #222222;
+    border-radius: 5px;
+    margin-left: 10px;
+    top: 10px;
+    cursor: pointer;
+    color: white;
+    outline: none;
+}
+
+.searchBar button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 0px 0px 0px !important;
+    font-size: .8rem
+}
+
+#siteLogo {
+    position: absolute;
+    left: 18%;
+    top: 10px;
+    width: 12%;
+    height: 4.5%;
+}
+
+#signIn {
+    position: fixed;
+    top: 10px;
+    right: 25%;
 }

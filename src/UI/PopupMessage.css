@@ -16,6 +16,7 @@
     border: 2px solid black;
     animation-name: popup;
     animation-duration: 1.6s;
+    color: black;
 }
 
 @keyframes popup {

@@ -1,36 +1,35 @@
 .bottomBar {
-    width: 70%;
+    width: 60%;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     position: fixed;
-    bottom: 20px;
+    bottom: 0;
     height: 5rem;
-    left: 15%;
-    background-color: white;
+    left: 20%;
+    background-color: #2f2e2f;
     font-size: 1.3rem;
+    border-radius: 20px 20px 0 0;
 }
 
-.bottomBar button {
-    color: blue;
+.bottomBar img {
     height: 50px;
-    border-radius: 20px;
-    position: absolute;
-    bottom: -.3rem;
-    width: 10%;
+    cursor: pointer;
 }
 
-#previous {
+.previous {
     left: 0;
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 #title {
     width: 80%;
     line-height: 2rem;
-    color: black;
+    color: white;
 }
 
-#next {
+.next {
     right: 0;
 }

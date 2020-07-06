@@ -15,26 +15,14 @@
     color: black;
 }
 
-.modalTitle {
-    height: 4rem;
-    background-color: #edeff1;
-    border-radius: 20px 20px 0 0;
-    border-bottom: 1px solid #0069d0;
-}
-
-.modalTitle p {
-    margin: 0;
-    padding: 1.5rem;
-    font-size: 1.6rem;
-}
-
 .modalInfo {
     display: flex;
     font-size: 1.3rem;
+    border-bottom: 1px solid black;
 }
 
 .modalInfo ul {
-    width: 28%;
+    margin: 0;
 }
 
 .modalInfo li {
@@ -42,24 +30,26 @@
 }
 
 .playlistName {
-    width: 50%;
+    width: 100%;
+    margin: 10px 0px 20px 0px;
+    border-radius: 20px;
+    text-align: center;
 }
 
 #playlistNameInput {
-    margin: 3% 0px 32px 32px;
-    width: 80%;
-    height: 50%;
+    padding-bottom: 20px;
+    width: 50%;
     border: none;
     font-size: 1.7rem;
     font-weight: bold;
+    outline: none;
     text-align: center;
 }
 
 #playlistNameUnderline {
-    margin-left: 15px;
     height: 1px;
     background-color: black;
-    width: 80%;
+    width: 100%;
     animation-name: underline;
     animation-duration: 1s;
     animation-timing-function: ease;
@@ -67,7 +57,7 @@
 
 @keyframes underline {
     from {width: 0%;}
-    to {width: 80%;}
+    to {width: 100%;}
   }
 
 .playlistName input:focus {
@@ -75,54 +65,76 @@
     border-radius: 15px;
 }
 
-.shuffle {
-    margin: 20px;
-    width: 15%;
+.playlistSettings {
+    margin-bottom: 20px;
+    margin-top: -20px;
 }
 
-.shuffle p {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
-    height: 70%;
-    background-color: #73e5cf;
-    border-radius: 20px;
+.playlistSettings img {
+    width: 100%;
+}
+
+.shuffle {
+    margin: 20px;
+}
+
+.shuffle img {
+    cursor: pointer;
 }
 
 .play {
     margin: 20px;
-    width: 15%;
 }
 
-.play p {
-    margin: 0;
-    color: white;
+.play img {
+    cursor: pointer;
+}
+
+.loop button{
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 40px;
     width: 100px;
-    height: 100px;
-    background-color: rgba(0, 0, 0, 0.15);
-    border-radius: 120px;
+    cursor: pointer;
+}
+
+.loop img {
+    width: 30%;
+}
+
+.loop p {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+.playlistDescription {
+    width: 100%;
 }
 
 .playlistDescription p {
     margin: 0;
     position: relative;
-    top: 20px;
+    top: 0px;
     left: 5%;
 }
 
 #playlistDescriptionInput {
-    margin: 30px 5% 0px 5%;
+    margin: 0px 5%;
     font-size: 2rem;
     height: 65px;
     width: 90%;
     max-width: 90%;
     min-width: 90%;
     border: 1px solid black;
+}
+
+.playlistContainer {
+    width: 99%;
+    max-height: 65vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .listVideo {
@@ -132,16 +144,16 @@
     margin: 10px 1.5%;
     border: 2px solid #dfe1e7;
     text-align: center;
-}
-
-#active {
+    min-height: 230px;
 }
 
 .listTitle {
-    height: 3vw;
-    text-align: center;
-    font-size: 1vw;
+    min-height: 3vw;
+    font-size: 1rem;
     background-color: #edeff1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .listInfo {
@@ -152,7 +164,7 @@
 .thumbnail {
     width: 50%;
     height: 120px;
-    background-color: blue;
+    background-color: white;
     margin: 5%;
 }
 

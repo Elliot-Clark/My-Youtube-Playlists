@@ -59,24 +59,32 @@ const Modal = (props) => {
     }
 
     const play = (event) => {
+        console.log(Indexes);
         //Filters out false values from array
         const URLs = props.playlists.videoURLs.filter(ele => ele);
         const Titles = props.playlists.videoTitles.filter(ele => ele);
+        for (let x = 0; x < Indexes.length; x++) {
+            Indexes[x] = props.playlists.videoStartTimes[Indexes[x]]
+        }
+        console.log(Indexes);
         if (event) {
             //If shuffle was clicked, plays the videos in a random order
-            //This function randomizes the order of both URL and Titles arrays in the same exact way. Doesn't even need to make another array!
+            //This function randomizes the order of URLs, Titles, and Start Time arrays in the same exact way. Doesn't even need to make another array!
             for (let arrayLength = URLs.length; arrayLength > 0; arrayLength--) {
                 let spliceIndex = Math.floor(Math.random() * (arrayLength));
                 URLs.push(URLs.splice(spliceIndex, 1).toString());
                 Titles.push(Titles.splice(spliceIndex, 1).toString());
+                Indexes.push(Indexes.splice(spliceIndex, 1).toString());
             }
         }
         props.resetPlayCount();
-        props.playPlaylist(URLs, Titles);
+        props.playPlaylist(URLs, Titles, Indexes);
     }
 
+    let Indexes = []
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
         if (item) {
+            Indexes.push(index);
             return (
                 <div key={index} className="listVideo" id="active">
                     <div className="listTitle">
@@ -103,8 +111,9 @@ const Modal = (props) => {
         <>
             {props.modal ? 
                 <div className="modal">
-                    <div className="modalTitle">
-                        <p>My Playlist</p>
+                    <div className="playlistName">
+                            <input type="text" id="playlistNameInput" defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
+                            <div id="playlistNameUnderline"></div>
                     </div>
 
                     <div className="modalInfo">
@@ -114,25 +123,32 @@ const Modal = (props) => {
                                 "1 Video" : 
                                 props.playlists.videoTitles.filter(Boolean).length + " Videos"} 
                             </li>
+                            <li>
+                                <div className="loop">
+                                    <button onClick={() => props.toggleLoop()}>
+                                    <p>Loop    </p> 
+                                    {props.looping ? (
+                                        <img src="Loop-Animation.gif" onClick={() => props.toggleLoop()} alt="Looping On Gif"></img>) :
+                                        (<img src="Loop-Animation.png" onClick={() => props.toggleLoop()} alt="Looping Of Png"></img>
+                                    )}
+                                    </button>
+                                </div>
+                            </li>
                         </ul>
-                        <div className="playlistName">
-                            <input type="text" id="playlistNameInput" defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
-                            <div id="playlistNameUnderline"></div>
-                        </div>
-                        <div className="shuffle" onClick={(event) => play(event)}>
-                            <p>Shuffle</p>
-                        </div>
-                        <div className="play" onClick={() => play()}>
-                            <p>Play</p>
-                        </div>
-                        <div className="loop">
-                            <button onClick={() => props.toggleLoop()}>Loop</button>
-                        </div>
-                    </div>
+                            <div className="playlistSettings">
+                                <div className="shuffle" onClick={(event) => play(event)}>
+                                    <img src="/Shuffle.png" alt="Shuffle Icon" title="Shuffle Playlist"></img>
+                                </div>
+                                <div className="play" onClick={() => play()}>
+                                    <img src="/Play.png" alt="Play Icon" title="Play Playlist"></img>
+                                </div>
+                                
+                            </div>
 
-                    <div className="playlistDescription">
-                        <p>Playlist Description:</p>
-                        <textarea type="text" id="playlistDescriptionInput" defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
+                        <div className="playlistDescription">
+                            <p>Playlist Description:</p>
+                            <textarea type="text" id="playlistDescriptionInput" defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
+                        </div>
                     </div>
 
                     <div className="playlistContainer">
