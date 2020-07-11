@@ -33,12 +33,11 @@
     width: 100%;
     margin: 10px 0px 20px 0px;
     border-radius: 20px;
-    text-align: center;
 }
 
 #playlistNameInput {
     padding-bottom: 20px;
-    width: 50%;
+    width: 60%;
     border: none;
     font-size: 1.7rem;
     font-weight: bold;
@@ -98,6 +97,8 @@
     height: 40px;
     width: 100px;
     cursor: pointer;
+    outline: none;
+    border-width: 0px;
 }
 
 .loop img {

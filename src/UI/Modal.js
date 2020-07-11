@@ -112,7 +112,19 @@ const Modal = (props) => {
             {props.modal ? 
                 <div className="modal">
                     <div className="playlistName">
-                            <input type="text" id="playlistNameInput" defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
+                            <input type="text" id="playlistNameInput" key={props.playlists.playlistTitle} defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
+                            
+                            {props.playlistCount > 1 ? (
+                                <button onClick={() => props.togglePlaylistCount('decrease')}>Decrease</button>
+                            ) : (
+                                ''
+                            )}
+                            {props.numberOfPlaylists !== props.playlistCount ? (
+                                <button onClick={() => props.togglePlaylistCount('increase')}>Increase</button>
+                            ) : (
+                                ''
+                            )}
+                            <button onClick={props.createNewPlaylist}>New Playlist</button>
                             <div id="playlistNameUnderline"></div>
                     </div>
 
@@ -128,8 +140,8 @@ const Modal = (props) => {
                                     <button onClick={() => props.toggleLoop()}>
                                     <p>Loop    </p> 
                                     {props.looping ? (
-                                        <img src="Loop-Animation.gif" onClick={() => props.toggleLoop()} alt="Looping On Gif"></img>) :
-                                        (<img src="Loop-Animation.png" onClick={() => props.toggleLoop()} alt="Looping Of Png"></img>
+                                        <img src="Loop-Animation.gif" onClick={() => props.toggleLoop()} alt="Looping On Gif" title="Loop"></img>) :
+                                        (<img src="Loop-Animation.png" onClick={() => props.toggleLoop()} alt="Looping Of Png" title="Loop"></img>
                                     )}
                                     </button>
                                 </div>
@@ -137,17 +149,17 @@ const Modal = (props) => {
                         </ul>
                             <div className="playlistSettings">
                                 <div className="shuffle" onClick={(event) => play(event)}>
-                                    <img src="/Shuffle.png" alt="Shuffle Icon" title="Shuffle Playlist"></img>
+                                    <img src="/Shuffle.png" alt="Shuffle Icon" title="Shuffle"></img>
                                 </div>
                                 <div className="play" onClick={() => play()}>
-                                    <img src="/Play.png" alt="Play Icon" title="Play Playlist"></img>
+                                    <img src="/Play.png" alt="Play Icon" title="Play"></img>
                                 </div>
                                 
                             </div>
 
                         <div className="playlistDescription">
                             <p>Playlist Description:</p>
-                            <textarea type="text" id="playlistDescriptionInput" defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
+                            <textarea type="text" id="playlistDescriptionInput" key={props.playlists.playlistTitle} defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
                         </div>
                     </div>
 

@@ -16,6 +16,8 @@ class App extends Component {
     startTime: 0, 
     signedIn: false,
     modal: false,
+    playlistCount: 1,
+    numberOfPlaylists: 1,
     message: "",
     playMessage: true,
     playCount: 0,
@@ -26,14 +28,11 @@ class App extends Component {
     searchResultURLs: [],
     searchResultTitles: [],
 
-    userName: "",
     userId: "",
     autostart: 1,
-    videoWidth: 0.75,
-    videoHeight: 0.75,
 
     playlists: {
-      playlistTitle: "My First Playlist...",
+      playlistTitle: "Playlist Number 1",
       dateCreated: "",
       playlistDescription: "",
       videoTitles: [],
@@ -46,13 +45,15 @@ class App extends Component {
     let userNumber = "User" + userId;
     axios.get("user-data/" + userNumber + ".json")
       .then((res) => {
-        console.log(res.data);
         if (res.data) {
           //Existing User - Database entry exists under that ID. Set the state with their data
-          let fetchedUserSettings = res.data.Playlists;
+          let fetchedUserSettings = res.data['Playlists' + this.state.playlistCount.toString()];
+          let max = Object.keys(res.data).length - 2;
+          console.log(max);
           this.setState((prevState) => ({
             autostart: res.data.autostart, 
             userId: userId,
+            numberOfPlaylists: max,
             playlists: {
               ...prevState.playlists,
               dateCreated: fetchedUserSettings.dateCreated,
@@ -80,16 +81,44 @@ class App extends Component {
       .catch((error) => console.log(error));
   };
 
+  createNewPlaylist = () => {
+    if (this.state.playlists.videoURLs) {
+      console.log(this.state.numberOfPlaylists);
+      let defaultUserPlaylistData = {
+        playlistTitle: "Playlist Number " + (this.state.numberOfPlaylists + 1).toString(),
+        dateCreated: "",
+        playlistDescription: "",
+        videoStartTimes : {
+          0: 0
+        },
+        videoTitles : {
+          0: 0
+        },
+        videoURLs : {
+          0: 0
+        }
+      };
+      axios.get("user-data/User" + this.state.userId + ".json")
+      .then(() => {
+        let ele = this.state.numberOfPlaylists += 1;
+        axios.put("user-data/User" + this.state.userId + "/Playlists" + ele + ".json", defaultUserPlaylistData)
+        .then(() => {
+          this.setState({ playlistCount: ele }, () => {
+            this.togglePlaylistCount("new playlist");
+          });
+        })
+      })
+    }
+  }
+
   defaultDataPost = () => {
     const defaultUserData = {
-      userName: this.state.userName,
       userId: this.state.userId,
       autostart: this.state.autostart,
     };
-    console.log(this.state.userId);
     axios.put("user-data/User" + this.state.userId + ".json", defaultUserData);
     const defaultUserPlaylistData = {
-      playlistTitle: "My First Playlist",
+      playlistTitle: "Playlist Number 1",
       dateCreated: "",
       playlistDescription: "",
     };
@@ -99,7 +128,7 @@ class App extends Component {
       },
     }));
     axios
-      .put("user-data/User" + this.state.userId + "/Playlists.json", defaultUserPlaylistData)
+      .put("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + ".json", defaultUserPlaylistData)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
@@ -134,7 +163,6 @@ class App extends Component {
     if (title.item) {
       titleCheck = title.item;
     }
-    console.log(title);
     this.setState({ 
       videoURL: URL, 
       videoTitle: titleCheck,
@@ -153,11 +181,44 @@ class App extends Component {
   }
 
   toggleLoop = () => {
-    console.log("Lfefafaw");
     if (this.state.loopPlaylist) {
       this.setState({ loopPlaylist: 0 });
     } else {
       this.setState({ loopPlaylist: 1 });
+    }
+  }
+
+  togglePlaylistCount = (text) => {
+    let changePlaylists = () => {
+      let userNumber = "User" + this.state.userId;
+      axios.get("user-data/" + userNumber + "/Playlists" + this.state.playlistCount + ".json")
+      .then((res) => {
+        this.setState((prevState) => ({
+          playlists: {
+            ...prevState.playlists,
+            dateCreated: res.data.dateCreated,
+            playlistTitle: res.data.playlistTitle,
+            playlistDescription: res.data.playlistDescription,
+            videoTitles: res.data.videoTitles,
+            videoURLs: res.data.videoURLs,
+            videoStartTimes: res.data.videoStartTimes
+          },
+        }));
+      })
+    }
+    let ele = this.state.playlistCount;
+    if (text === 'increase') {
+      this.setState({ playlistCount: ele +=1}, () => {
+        changePlaylists();
+      })
+    }
+    if (text === 'decrease') {
+      this.setState({ playlistCount: ele -=1}, () => {
+        changePlaylists();
+      })
+    }
+    if (text === 'new playlist') {
+      changePlaylists();
     }
   }
 
@@ -174,7 +235,7 @@ class App extends Component {
     const update = {
       playlistTitle: input
     }
-    axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + ".json", update);
     this.setState((prevState) => ({
       playlists: {
         ...prevState.playlists,
@@ -188,7 +249,7 @@ class App extends Component {
     const update = {
       playlistDescription: input
     }
-    axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + ".json", update);
     this.setState((prevState) => ({
       playlists: {
         ...prevState.playlists,
@@ -199,23 +260,24 @@ class App extends Component {
 
   addVideoToPlaylist = () => {
     if (!this.state.playlists.dateCreated) {
-      
       //No videos, creating a new playlist
-      console.log("No videos. Creating new playlist...");
       let date = new Date();
       date = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+      let ele = "Playlist Number 1"
+      if (this.state.playlistCount > 1 ) {
+        ele = "Playlist Number " + this.state.numberOfPlaylists.toString();
+      }
       const update = {
         dateCreated: date,
         playlistDescription: "",
-        playlistTitle: "My First Playlist"
+        playlistTitle: ele
       }
-      axios.patch("user-data/User" + this.state.userId + "/Playlists.json", update);
+      axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + ".json", update);
       this.setState((prevState) => ({
         playlists: {
           ...prevState.playlists,
           dateCreated: date,
           playlistDescription: "",
-          playlistTitle: "My First Playlist"
         },
       }));
       this.showUserMessage("Video Added to Playlist!");
@@ -224,18 +286,16 @@ class App extends Component {
       this.showUserMessage("Video is already on your Playlist");
       return
     }
-    console.log("Adding to existing playlist and posting data");
     const count = this.state.playlists.videoURLs.length;
-    console.log(count);
     let header = {};
     header[count] = this.state.videoURL;
-    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoURLs.json", header)
+    axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoURLs.json", header)
     .then (() => {
       header[count] = this.state.videoTitle;
-      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoTitles.json", header)
+      axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoTitles.json", header)
       .then(() => {
         header[count] = 0;
-        axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes.json", header);
+        axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoStartTimes.json", header);
       })
     })
     .catch((error) => {console.log(error)});
@@ -257,9 +317,9 @@ class App extends Component {
   removeVideoFromPlaylist = (index) => {
     const remove = {}, removeIndex = index;
     remove[removeIndex] = 0;
-    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", remove);
-    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoTitles/.json", remove);
-    axios.patch("user-data/User" + this.state.userId + "/Playlists/videoURLs/.json", remove);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoStartTimes/.json", remove);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoTitles/.json", remove);
+    axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoURLs/.json", remove);
     let a = this.state.playlists.videoStartTimes;
     let b = this.state.playlists.videoURLs;
     let c = this.state.playlists.videoTitles;
@@ -276,12 +336,11 @@ class App extends Component {
       },
     }));
     this.showUserMessage("Video Removed");
-    console.log(this.state.playlists.videoURLs);
     if (this.state.playlists.videoURLs.every(element => element === null)) {
       let a = {
         dateCreated: ""
       };
-      axios.put("user-data/User" + this.state.userId + "/Playlists.json", a);
+      axios.put("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + ".json", a);
       this.setState((prevState) => ({
         playlists: {
           ...prevState.playlists,
@@ -292,12 +351,11 @@ class App extends Component {
   }
 
   changePlaylistStartTime = (index, time) => {
-    console.log(index, time);
     //Stores the start times in the database, if it is different from the one already stored for it
     if (this.state.playlists.videoStartTimes[index] !== time) {
       const change = {}, changeIndex = index;
       change[changeIndex] = time;
-      axios.patch("user-data/User" + this.state.userId + "/Playlists/videoStartTimes/.json", change);
+      axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoStartTimes/.json", change);
       let a = this.state.playlists.videoStartTimes;
       a.splice(index, 1, time);
       this.setState((prevState) => ({
@@ -307,13 +365,11 @@ class App extends Component {
         },
       }));
     } else {
-      console.log("Repeat value");
       return
     }
   }
 
   playPlaylist = (videoArray, videoTitles, startTimes) => {
-    console.log(startTimes);
     //Receive array of URLS to play
     if (videoArray) {
       //Executes when the play button is pressed in the playlist menu
@@ -334,13 +390,11 @@ class App extends Component {
         videoTitle: this.state.playingVideosTitles[this.state.playCount], 
         startTime: this.state.playingVideosStartTime[this.state.playCount]
       });
-      console.log(this.state.playCount);
     }
   }
 
   playCount = () => {
     if (this.state.playCount === this.state.playingVideos.length -1 && this.state.loopPlaylist) {
-      console.log("Loop Running");
       this.setState({ playCount: 0 }, () => {
         this.playPlaylist();
       });
@@ -376,20 +430,21 @@ class App extends Component {
 
   render() {
     return (
-      <>
-
-        <div className="background"></div>
-
-        <BottomBar 
-          playingVideos={this.state.playingVideos}
-          videoURL={this.state.videoURL}
-          reversePlayCount={this.reversePlayCount}
-          playCount={this.playCount}
-          playCountState={this.state.playCount}
-          videoTitle={this.state.videoTitle}
-        />
+      <>  
 
         
+
+        {this.state.videoTitle ? (
+          <BottomBar 
+            playingVideos={this.state.playingVideos}
+            videoURL={this.state.videoURL}
+            reversePlayCount={this.reversePlayCount}
+            playCount={this.playCount}
+            playCountState={this.state.playCount}
+            videoTitle={this.state.videoTitle}
+          />) : (
+          ''
+        )}
 
         <SerchBar
           dataFetch={this.dataFetch}
@@ -422,6 +477,10 @@ class App extends Component {
         <Modal
           toggleVideo={this.toggleVideo}
           looping={this.state.loopPlaylist}
+          createNewPlaylist={this.createNewPlaylist}
+          togglePlaylistCount={this.togglePlaylistCount}
+          playlistCount={this.state.playlistCount}
+          numberOfPlaylists={this.state.numberOfPlaylists}
           toggleLoop={this.toggleLoop}
           playlists={this.state.playlists}
           playPlaylist={this.playPlaylist}
@@ -440,8 +499,6 @@ class App extends Component {
             playCount={this.playCount}
             videoURL={this.state.videoURL}
             startTime={this.state.startTime}
-            videoWidth={this.state.videoWidth}
-            videoHeight={this.state.videoHeight}
             autostart={this.state.autostart}
           />
         ) : (

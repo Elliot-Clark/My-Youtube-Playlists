@@ -61,16 +61,12 @@ class SearchBar extends Component {
       return window.gapi.client.youtube.search.list({
         "part": "snippet",
         "maxResults": 6,
+        "order": "relevance",
+        "type": "video",
         "q": searchValue
       })
       .then((response) => {
-        console.log(response);
         let ytSearch = response.result.items[0];
-        //Youtube API searchs can sometimes return nonvideos as the first result. Usually channels with no videoID
-        //This will filter out that first result if that is the case.
-        if (!ytSearch.id.videoId) {
-          ytSearch = response.result.items[1];
-        }
         const convertText = (text) => {
           //The Youtube API tends to return certain strings with special characters. This function converts it back to normal
           return text.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
@@ -108,7 +104,7 @@ class SearchBar extends Component {
           <input
             id="search"
             type="search"
-            placeholder="Search..."
+            placeholder="Search YouTube..."
             size="20"
             onKeyDown={this.search}
             onFocus={this.initSearch}

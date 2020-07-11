@@ -4,7 +4,7 @@ import './BottomBar.css';
 const BottomBar = (props) => {
     return (
         <div className="bottomBar">
-            {props.playCountState >= 1 && props.videoURL ? 
+            {props.playCountState >= 1 && props.videoURL && props.playingVideos.length ? 
             (<img 
                 src="/Play-Animation.png" 
                 className="previous" 
@@ -23,7 +23,7 @@ const BottomBar = (props) => {
 
             <div id="title">{props.videoTitle}</div>
 
-            {props.playingVideos.length && props.videoURL ? 
+            {props.playingVideos.length > 1 && props.videoURL ? 
             (<img 
                 src="/Play-Animation.png" 
                 className="next" 

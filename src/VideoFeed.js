@@ -26,8 +26,8 @@ const VideoFeed = (props) => {
     console.log(err)
   }
   
-  let videoWidth = window.innerWidth * props.videoWidth;
-  let videoHeight = window.innerHeight * props.videoHeight;  
+  let videoWidth = window.innerWidth * 0.75;
+  let videoHeight = window.innerHeight * 0.75;  
 
   let videoDimensions = {
     height: videoHeight,
