@@ -66,7 +66,6 @@ const Modal = (props) => {
         for (let x = 0; x < Indexes.length; x++) {
             Indexes[x] = props.playlists.videoStartTimes[Indexes[x]]
         }
-        console.log(Indexes);
         if (event) {
             //If shuffle was clicked, plays the videos in a random order
             //This function randomizes the order of URLs, Titles, and Start Time arrays in the same exact way. Doesn't even need to make another array!
@@ -82,6 +81,8 @@ const Modal = (props) => {
     }
 
     let Indexes = []
+
+    console.log(props.playlists.videoTitles);
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
         if (item) {
             Indexes.push(index);
@@ -107,6 +108,19 @@ const Modal = (props) => {
             )
         }
     });
+
+    let playlistSelection = [];
+    for (let x = 1; x <= props.numberOfPlaylists; x++) {
+        playlistSelection.push(
+        <div 
+            title={"Go to Playlist " + x}
+            className='playlistSelector' 
+            onClick={() => {props.togglePlaylistCount(x)}} 
+            key={x}>{x}
+        </div>)
+    }
+
+
     return (
         <>
             {props.modal ? 
@@ -114,22 +128,20 @@ const Modal = (props) => {
                     <div className="playlistName">
                             <input type="text" id="playlistNameInput" key={props.playlists.playlistTitle} defaultValue={props.playlists.playlistTitle} onBlur={() => props.changePlaylistTitle()}></input>
                             
-                            {props.playlistCount > 1 ? (
-                                <button onClick={() => props.togglePlaylistCount('decrease')}>Decrease</button>
-                            ) : (
-                                ''
-                            )}
-                            {props.numberOfPlaylists !== props.playlistCount ? (
-                                <button onClick={() => props.togglePlaylistCount('increase')}>Increase</button>
-                            ) : (
-                                ''
-                            )}
-                            <button onClick={props.createNewPlaylist}>New Playlist</button>
+                            <div id="playlistSelectionContainer">
+                                {playlistSelection}
+                                {props.numberOfPlaylists < 9 ? (
+                                    <button title="Create a New Playlist" className='playlistSelector' onClick={props.createNewPlaylist}>+</button>
+                                ) : (
+                                    ''
+                                )}
+                            </div>
                             <div id="playlistNameUnderline"></div>
                     </div>
 
                     <div className="modalInfo">
                         <ul>
+
                             <li>Created: <b>{props.playlists.dateCreated}</b></li>
                             <li>{props.playlists.videoTitles.filter(Boolean).length === 1 ? 
                                 "1 Video" : 
@@ -138,7 +150,7 @@ const Modal = (props) => {
                             <li>
                                 <div className="loop">
                                     <button onClick={() => props.toggleLoop()}>
-                                    <p>Loop    </p> 
+                                    <p>Loop</p> 
                                     {props.looping ? (
                                         <img src="Loop-Animation.gif" onClick={() => props.toggleLoop()} alt="Looping On Gif" title="Loop"></img>) :
                                         (<img src="Loop-Animation.png" onClick={() => props.toggleLoop()} alt="Looping Of Png" title="Loop"></img>
@@ -148,12 +160,17 @@ const Modal = (props) => {
                             </li>
                         </ul>
                             <div className="playlistSettings">
-                                <div className="shuffle" onClick={(event) => play(event)}>
-                                    <img src="/Shuffle.png" alt="Shuffle Icon" title="Shuffle"></img>
-                                </div>
-                                <div className="play" onClick={() => play()}>
-                                    <img src="/Play.png" alt="Play Icon" title="Play"></img>
-                                </div>
+                                {props.playlists.videoTitles.filter(Boolean).length > 0 ? (
+                                    <div className="shuffle" onClick={(event) => play(event)}>
+                                        <img src="/Shuffle.png" alt="Shuffle Icon" title="Shuffle"></img>
+                                    </div>) : ('')
+                                }
+
+                                {props.playlists.videoTitles.filter(Boolean).length > 0 ? (
+                                    <div className="play" onClick={() => play()}>
+                                        <img src="/Play.png" alt="Play Icon" title="Play"></img>
+                                    </div>) : ('')
+                                }
                                 
                             </div>
 

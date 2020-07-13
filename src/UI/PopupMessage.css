@@ -15,13 +15,14 @@
     border-radius: 5px; 
     border: 2px solid black;
     animation-name: popup;
-    animation-duration: 1.6s;
+    animation-duration: 5.6s;
     color: black;
 }
 
 @keyframes popup {
     0% {bottom: 30px;}
-    12% {bottom: 80px;}
+    3% {bottom: 80px;}
+    30% {bottom: 0px;}
   }
 
 .popup p {

@@ -112,9 +112,9 @@ class SearchBar extends Component {
           <button type="submit" value="Submit" onClick={this.execute}>Search</button>
 
           {this.props.signedIn ? (
-            " "
+            <div className="playlistTitleDisplay">{this.props.playlistTitle}</div>
           ) : (
-            <button id="signIn" onClick={this.authenticate}>Sign In</button>
+            <button onClick={this.authenticate}>Sign In</button>
           )}
         </div>
 

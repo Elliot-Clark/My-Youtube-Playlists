@@ -48,16 +48,23 @@
     font-size: .8rem
 }
 
+.playlistTitleDisplay {
+    position: fixed;
+    right: 16%;
+    height: 4%;
+    font-size: 1.4rem;
+    background-color: #666666;
+    box-shadow: 0px 2px 0px 2px #222222;
+    width: auto;
+    padding: 5px 15px 0px 15px;
+    text-align: center;
+    border-radius: 0px 0px 10px 10px;
+}
+
 #siteLogo {
     position: absolute;
     left: 18%;
     top: 10px;
     width: 12%;
     height: 4.5%;
-}
-
-#signIn {
-    position: fixed;
-    top: 10px;
-    right: 25%;
 }
