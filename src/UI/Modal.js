@@ -82,7 +82,6 @@ const Modal = (props) => {
 
     let Indexes = []
 
-    console.log(props.playlists.videoTitles);
     const playlistVideos = props.playlists.videoTitles.map((item, index) => {
         if (item) {
             Indexes.push(index);
@@ -114,12 +113,12 @@ const Modal = (props) => {
         playlistSelection.push(
         <div 
             title={"Go to Playlist " + x}
-            className='playlistSelector' 
+            //Adds a class if it is selected, allowing CSS to show this div is active
+            className={`playlistSelector ${props.playlistCount === x ? 'targetPlaylistSelector': '' }`}
             onClick={() => {props.togglePlaylistCount(x)}} 
             key={x}>{x}
         </div>)
     }
-
 
     return (
         <>
@@ -175,16 +174,27 @@ const Modal = (props) => {
                             </div>
 
                         <div className="playlistDescription">
-                            <p>Playlist Description:</p>
-                            <textarea type="text" id="playlistDescriptionInput" key={props.playlists.playlistTitle} defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
+                            <textarea type="text" placeholder="Playlist Description..." id="playlistDescriptionInput" key={props.playlists.playlistTitle} defaultValue={props.playlists.playlistDescription} maxLength="250" onBlur={() => props.changePlaylistDescription()}></textarea>
                         </div>
-                    </div>
+                            <button id="deleteButton" onClick={props.showConfirmationWindow}>Delete Playlist</button>
+                        </div>
 
                     <div className="playlistContainer">
                         {playlistVideos}
                     </div>
                     
-
+                    {props.confirmationWindow ? (
+                        <>
+                        <div id="confirmationWindow">
+                            <p>Are you sure you want to delete: {props.playlists.playlistTitle}? This action cannont be undone.</p>
+                            <button onClick={() => { props.showConfirmationWindow(); props.deletePlaylist();}}>Yes, Delete it</button>
+                            <button onClick={props.showConfirmationWindow}>No, Go Back</button>
+                        </div>
+                        <div id="confirmationWindowBackground" onClick={props.showConfirmationWindow}></div>
+                        </>
+                    ) : (
+                        ''
+                    )}
 
                 </div>
                 : ''

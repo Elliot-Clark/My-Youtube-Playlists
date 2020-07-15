@@ -69,6 +69,11 @@
     margin: 5px;
 }
 
+.targetPlaylistSelector {
+    color: white;
+    border: 2px solid black;
+}
+
 .playlistSelector:active {
     transform: scale(.9);
 }
@@ -91,11 +96,6 @@
 .playlistName input:focus {
     box-shadow: 3px 5px 12px #888888;
     border-radius: 15px;
-}
-
-.playlistSettings {
-    margin-bottom: 20px;
-    margin-top: -20px;
 }
 
 .playlistSettings img {
@@ -155,21 +155,13 @@
     width: 100%;
 }
 
-.playlistDescription p {
-    margin: 0;
-    position: relative;
-    top: 0px;
-    left: 5%;
-}
-
 #playlistDescriptionInput {
     margin: 0px 5%;
-    font-size: 2rem;
-    height: 65px;
-    width: 90%;
-    max-width: 90%;
-    min-width: 90%;
+    font-size: 1.3rem;
+    height: 60%;
+    width: 80%;
     border: 1px solid black;
+    resize: none;
 }
 
 .playlistContainer {
@@ -244,4 +236,48 @@
     width: 90%;
     resize: none;
     border: 1px solid black;
+}
+
+#deleteButton {
+    height: 70px;
+    border: none;
+    position: relative;
+    right: 5%;
+    background-color: red;
+    font-size: 1.1rem;
+}
+
+#confirmationWindow {
+    position: absolute;
+    width: 30%;
+    height: 200px;
+    background-color: white;
+    border: 5px solid #999;
+    top: 30%;
+    left: 35%;
+    text-align: center;
+    z-index: 10;
+}
+
+#confirmationWindow p {
+    margin: 10px;
+    margin-bottom: 15%;
+    font-size: 1.1rem;
+}
+
+#confirmationWindow button {
+    margin: 15px;
+    height: 20%;
+    border: 1px solid grey;
+    background-color: #dfe1e7;
+    border-radius: 5px;
+}
+
+#confirmationWindowBackground {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9;
 }

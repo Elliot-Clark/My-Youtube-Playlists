@@ -16,6 +16,7 @@ class App extends Component {
     startTime: 0, 
     signedIn: false,
     modal: false,
+    confirmationWindow: false,
     playlistCount: 1,
     numberOfPlaylists: 1,
     message: "",
@@ -87,10 +88,9 @@ class App extends Component {
     };
     axios.get("user-data/User" + this.state.userId + ".json")
     .then(() => {
-      let ele = this.state.numberOfPlaylists += 1;
-      axios.put("user-data/User" + this.state.userId + "/Playlists" + ele + ".json", defaultUserPlaylistData)
+      axios.put("user-data/User" + this.state.userId + "/Playlists" + (this.state.numberOfPlaylists + 1) + ".json", defaultUserPlaylistData)
       .then(() => {
-        this.setState({ playlistCount: ele }, () => {
+        this.setState({ playlistCount: this.state.numberOfPlaylists += 1 }, () => {
           this.togglePlaylistCount("new playlist");
         });
       })
@@ -179,7 +179,6 @@ class App extends Component {
       let userNumber = "User" + this.state.userId;
       axios.get("user-data/" + userNumber + "/Playlists" + this.state.playlistCount + ".json")
       .then((res) => {
-        console.log(res.data.videoTitles);
         let vt = res.data.videoTitles
         let vu = res.data.videoURLs
         let vst = res.data.videoStartTimes
@@ -211,6 +210,14 @@ class App extends Component {
     }
   }
 
+  showConfirmationWindow = () => {
+    if (!this.state.confirmationWindow) {
+      this.setState({ confirmationWindow: true});
+    } else {
+      this.setState({ confirmationWindow: false});
+    }
+  }
+
   openModal = () => {
     this.setState({ modal: true });
   };
@@ -221,6 +228,7 @@ class App extends Component {
 
   changePlaylistTitle = () => {
     const input = document.getElementById("playlistNameInput").value;
+    console.log(input);
     const update = {
       playlistTitle: input
     }
@@ -337,6 +345,27 @@ class App extends Component {
         },
       }));
     }
+  }
+
+  deletePlaylist = () => {
+    console.log("Running");
+    //Moves all the playlists down one, and deletes the last playlist in the object, before uploading the new object to the database.
+    axios.get("user-data/User" + this.state.userId + ".json")
+      .then((res) => {
+        for (let x = this.state.playlistCount; x < this.state.numberOfPlaylists; x++ ) {
+          res.data["Playlists" + x] = res.data["Playlists" + (x + 1)];
+        }
+        delete res.data["Playlists" + this.state.numberOfPlaylists];
+        axios.put("user-data/User" + this.state.userId + ".json", res.data).then(() => {
+          this.setState({ numberOfPlaylists: this.state.numberOfPlaylists -1 }, () => {
+            if (this.state.playlistCount === this.state.numberOfPlaylists +1) {
+              this.togglePlaylistCount(this.state.numberOfPlaylists);
+            } else {
+              this.togglePlaylistCount("new playlist")
+            }
+          });
+        })
+      })
   }
 
   changePlaylistStartTime = (index, time) => {
@@ -467,6 +496,7 @@ class App extends Component {
           looping={this.state.loopPlaylist}
           createNewPlaylist={this.createNewPlaylist}
           togglePlaylistCount={this.togglePlaylistCount}
+          deletePlaylist={this.deletePlaylist}
           playlistCount={this.state.playlistCount}
           numberOfPlaylists={this.state.numberOfPlaylists}
           toggleLoop={this.toggleLoop}
@@ -475,6 +505,8 @@ class App extends Component {
           resetPlayCount={this.resetPlayCount}
           closeModal={this.closeModal}
           modal={this.state.modal}
+          showConfirmationWindow={this.showConfirmationWindow}
+          confirmationWindow={this.state.confirmationWindow}
           changePlaylistStartTime={this.changePlaylistStartTime}
           changePlaylistTitle={this.changePlaylistTitle}
           changePlaylistDescription={this.changePlaylistDescription}
