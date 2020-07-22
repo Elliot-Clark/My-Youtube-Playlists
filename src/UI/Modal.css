@@ -39,7 +39,7 @@
     margin-bottom: 10px;
     border: 0px;
     border-radius: 0px;
-    width: 60%;
+    width: 80%;
     font-size: 1.7rem;
     font-weight: bold;
     outline: none;
@@ -245,6 +245,7 @@
     right: 5%;
     background-color: red;
     font-size: 1.1rem;
+    cursor: pointer;
 }
 
 #confirmationWindow {
@@ -271,13 +272,42 @@
     border: 1px solid grey;
     background-color: #dfe1e7;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 #confirmationWindowBackground {
     position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 101%;
+    width: 101%;
+    top: -1px;
+    left: -1px;
     z-index: 9;
+}
+
+@media only screen and (max-width: 1000px) {
+    .modal {
+        width: 100%;
+        left: 0%;
+    }
+
+    #playlistNameInput {
+        width: 100%;
+    }
+
+    .listVideo {
+        display: inline;
+        border: none;
+    }
+
+    .thumbnail {
+        width: auto;
+        height: 120px;
+        background-color: white;
+        margin: 5%;
+    }
+
+    .playlistSettings img {
+        width: 30px;
+    }
 }

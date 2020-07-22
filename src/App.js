@@ -28,7 +28,6 @@ class App extends Component {
     loopPlaylist: true,
     searchResultURLs: [],
     searchResultTitles: [],
-
     userId: "",
     autostart: 1,
 
