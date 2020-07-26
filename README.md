@@ -1,4 +1,10 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Added Perks:
+    Lightweight Single page app, less loading between videos and menus
+    Can specify a starting time for each individual video on your Playlist
+    None of the new white screen ads you may find on YouTube
+    Instant playing of a video after a search (Toggleable on/off) 
+
+This project was not based on a tutorial but rather my desire to showcase my knowledge in React and interacting with a Firebase database.
 
 ## Available Scripts
 

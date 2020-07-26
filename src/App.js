@@ -42,6 +42,7 @@ class App extends Component {
   };
 
   dataFetch = (userId) => {
+    //With the user logged in, this function makes a call to the database for any possible data
     let userNumber = "User" + userId;
     axios.get("user-data/" + userNumber + ".json")
       .then((res) => {
@@ -71,6 +72,7 @@ class App extends Component {
   };
 
   createNewPlaylist = () => {
+    //Creates a new playlist in the state and also in the database
     let defaultUserPlaylistData = {
       playlistTitle: "Playlist " + (this.state.numberOfPlaylists + 1).toString(),
       dateCreated: "",
@@ -97,6 +99,7 @@ class App extends Component {
   }
 
   defaultDataPost = () => {
+    //If a new user logs in, this function runs to send a basic set of data under their ID
     const defaultUserData = {
       userId: this.state.userId,
       autostart: this.state.autostart,
@@ -119,6 +122,7 @@ class App extends Component {
   };
 
   toggleAutostart = () => {
+    //Simple toggle function. If on, turn off. If off turn on. Also update database with the setting
     if (this.state.autostart) {
       this.setState({ autostart: 0 });
       if (this.state.signedIn) {
@@ -227,7 +231,6 @@ class App extends Component {
 
   changePlaylistTitle = () => {
     const input = document.getElementById("playlistNameInput").value;
-    console.log(input);
     const update = {
       playlistTitle: input
     }
@@ -347,7 +350,6 @@ class App extends Component {
   }
 
   deletePlaylist = () => {
-    console.log("Running");
     //Moves all the playlists down one, and deletes the last playlist in the object, before uploading the new object to the database.
     axios.get("user-data/User" + this.state.userId + ".json")
       .then((res) => {
