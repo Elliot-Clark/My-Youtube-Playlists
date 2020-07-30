@@ -2,6 +2,7 @@ import React from 'react';
 import './RightBar.css';
 import '../Fakedata'
 
+//Displays alternate videos that returned from the search query
 const RightBar = (props) => {
     const searchResults = props.searchResultTitles.map((item, index) => {
         return (

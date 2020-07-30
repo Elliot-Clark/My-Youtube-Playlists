@@ -24,7 +24,6 @@ class SearchBar extends Component {
       .signIn({ scope: "https://www.googleapis.com/auth/youtube.force-ssl" })
       .then(
         (result) => {
-          console.log(result);
           this.props.dataFetch(result.Ea);
           this.setState({
             userName: result.Qt.Bd,

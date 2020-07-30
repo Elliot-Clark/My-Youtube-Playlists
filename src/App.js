@@ -148,6 +148,7 @@ class App extends Component {
 
   toggleVideo = (URL, title, startTime, searchResultURLs, searchResultTitles) => {
     //The main function to play a video
+    //Runs after every search, or every new video on a playlist.
     let titleCheck = title;
     if (title.item) {
       titleCheck = title.item;
@@ -178,6 +179,7 @@ class App extends Component {
   }
 
   togglePlaylistCount = (ele) => {
+    //This function revolves around the user changing which playlist they want to view in the modal
     let changePlaylists = () => {
       let userNumber = "User" + this.state.userId;
       axios.get("user-data/" + userNumber + "/Playlists" + this.state.playlistCount + ".json")
@@ -230,6 +232,7 @@ class App extends Component {
   };
 
   changePlaylistTitle = () => {
+    //Changes the playlist title in both state and database
     const input = document.getElementById("playlistNameInput").value;
     const update = {
       playlistTitle: input
@@ -244,6 +247,7 @@ class App extends Component {
   };
 
   changePlaylistDescription = () => {
+    //Changes the playlist title in both state and database
     const input = document.getElementById("playlistDescriptionInput").value;
     const update = {
       playlistDescription: input
@@ -258,6 +262,7 @@ class App extends Component {
   };
 
   addVideoToPlaylist = () => {
+    //The function revolves around a user saving the active video to their playlist
     if (!this.state.playlists.dateCreated) {
       //No videos, creating a new playlist
       let date = new Date();
@@ -314,6 +319,7 @@ class App extends Component {
   }
 
   removeVideoFromPlaylist = (index) => {
+    //Removes the video from state and database
     const remove = {}, removeIndex = index;
     remove[removeIndex] = 0;
     axios.patch("user-data/User" + this.state.userId + "/Playlists" + this.state.playlistCount + "/videoStartTimes/.json", remove);
@@ -370,7 +376,7 @@ class App extends Component {
   }
 
   changePlaylistStartTime = (index, time) => {
-    //Stores the start times in the database, if it is different from the one already stored for it
+    //Stores the start times in the database, but only if it is different from the one already stored for it
     if (this.state.playlists.videoStartTimes[index] !== time) {
       const change = {}, changeIndex = index;
       change[changeIndex] = time;
@@ -389,7 +395,7 @@ class App extends Component {
   }
 
   playPlaylist = (videoArray, videoTitles, startTimes) => {
-    //Receive array of URLS to play
+    //Receive array of URLS to play when user plays a playlist
     if (videoArray) {
       //Executes when the play button is pressed in the playlist menu
       //Sets the array of upcoming videos, and plays the first one in the list
@@ -413,6 +419,7 @@ class App extends Component {
   }
 
   playCount = () => {
+    //Playcount is the state variable in charge of which video in a playlist array to play
     if (this.state.playCount === this.state.playingVideos.length -1 && this.state.loopPlaylist) {
       this.setState({ playCount: 0 }, () => {
         this.playPlaylist();
@@ -426,6 +433,7 @@ class App extends Component {
   }
 
   reversePlayCount = () => {
+    //If the user hits the back arrow while playing a playlist video
     let ele = this.state.playCount;
     this.setState({ playCount: ele -=1}, () => {
       this.playPlaylist()
@@ -433,6 +441,7 @@ class App extends Component {
   }
 
   resetPlayCount = () => {
+    //Reseting playlist count for playing another playlist
     this.setState({ playCount: 0});
   }
 

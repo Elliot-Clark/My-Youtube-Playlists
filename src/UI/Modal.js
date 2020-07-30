@@ -37,11 +37,12 @@ const Modal = (props) => {
     }
 
     const unconvertTime = (ele) => {
-        //Convert start time fetched from database into MM:SS format. 90 becomes 1:30
+        //Convert start time fetched from database into MM:SS format to display to user. 
+        //Example: 90 becomes 1:30
         let minutes = Math.floor( ele / 60);
         let seconds;
         if (ele % 60 < 10 ) {
-            //If seconds are only one digit, add a 0 in front of them
+            //If seconds are only one digit, add a 0 in front of them. Want 1:05 not 1:5
             seconds = "0" + ele % 60
         } else {
             seconds = ele % 60;
@@ -49,6 +50,7 @@ const Modal = (props) => {
         return minutes + ':' + seconds;
     }
 
+    //Regex for only allowing numbers and colon in the time input
     const reg = /^[\d:]+$/;
     const check = (event, index) => {
         if (!reg.test(event.target.value)) {
@@ -59,7 +61,7 @@ const Modal = (props) => {
     }
 
     const play = (event) => {
-        console.log(Indexes);
+        //Function for the user hitting the play playlist button
         //Filters out false values from array
         const URLs = props.playlists.videoURLs.filter(ele => ele);
         const Titles = props.playlists.videoTitles.filter(ele => ele);
