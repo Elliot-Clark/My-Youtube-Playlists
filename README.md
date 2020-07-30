@@ -1,74 +1,30 @@
-Added Perks:
-    Lightweight Single page app, less loading between videos and menus
-    Can specify a starting time for each individual video on your Playlist
-    None of the new white screen ads you may find on YouTube
-    Instant playing of a video after a search (Toggleable on/off) 
+My YouTube Playlists is an app designed to replicate playlist functionality of YouTube in a simple layout while also including a few additional benefits.
+
+## Added Perks:
+    - Lightweight Single page app, less loading between videos and menus
+    - Can specify a starting time for each individual video on your Playlist
+    - None of the new white screen ads you may find on YouTube
+    - Instant playing of a video after a search (Toggleable on/off) 
 
 This project was not based on a tutorial but rather my desire to showcase my knowledge in React and interacting with a Firebase database.
 
-## Available Scripts
+## Installing:
 
-In the project directory, you can run:
+Other than the normal 'npm install' and 'npm start' you will also need to rename '.envExample' to '.env'. Inside paste your API and 0Auth keys in the specificed areas, both of which you can get, for free, from the Google Developers Console website. The API key enable the YouTube search function, while the 0Auth enable Google sign in to your presaved playlists.
 
-### `npm start`
+Alternatively, this app can be used on my own website:
+Do note, it is made using the free API key, so the amount of searchs you can perform in one day is limited to 100. Playing videos from your playlists, however, do not require API key usage and can be done as many times as you wish.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Usage:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Similar to using YouTube, type in a search in the search bar at the top of the page to return videos. 
 
-### `npm test`
+Sign in through Google to enable the Playlist feature. Tto add the active video into your playlist, click the Add Video to Playlist button. The current playlist it will be added to is displayed on the upper right of the search bar. To change active playlists, click on the playlist button then click on the red icons on the upper right hand side of the modal.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To play a playlist, simply open the playlist modal and click the green play button. Playlists can be played in their added order, or shuffled to play in a random order. Playlists can also loop to play again upon reaching the end of the final video in your playlist.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Notes:
+-While it is possible to use this app on mobile, it will not function as seamlessly as a PC. This is due to mobile phones not allowing YouTube videos to autoplay to reduce spam.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+-Currently there appears to be a random chance of Google sign in failing. If this problem prosists, simply refresh the page to fix it.
