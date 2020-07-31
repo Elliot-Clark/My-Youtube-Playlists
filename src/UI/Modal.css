@@ -287,8 +287,8 @@
 
 @media only screen and (max-width: 1000px) {
     .modal {
-        width: 100%;
-        left: 0%;
+        width: 90%;
+        left: 5%;
     }
 
     #playlistNameInput {

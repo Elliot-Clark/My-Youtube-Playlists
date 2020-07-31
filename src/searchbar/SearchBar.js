@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import './SearchBar.css';
 
 class SearchBar extends Component {
-  state = {
-    videoTitle: "",
-    videoURL: "",
-    userName: "",
-    userId: "",
-  };
 
   componentDidMount() {
     window.gapi.load("client:auth2", function () {
@@ -23,12 +17,8 @@ class SearchBar extends Component {
       .getAuthInstance()
       .signIn({ scope: "https://www.googleapis.com/auth/youtube.force-ssl" })
       .then(
-        (result) => {
-          this.props.dataFetch(result.Ea);
-          this.setState({
-            userName: result.Qt.Bd,
-            userId: result.Ea,
-          });
+        () => {
+          this.props.dataFetch(window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getId());
           this.props.toggleSignIn();
           this.loadClient();
         },
