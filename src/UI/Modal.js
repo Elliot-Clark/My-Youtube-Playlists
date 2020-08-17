@@ -108,6 +108,9 @@ const Modal = (props) => {
                 </div>
             )
         }
+        else {
+            return null
+        }
     });
 
     let playlistSelection = [];
@@ -163,13 +166,13 @@ const Modal = (props) => {
                             <div className="playlistSettings">
                                 {props.playlists.videoTitles.filter(Boolean).length > 0 ? (
                                     <div className="shuffle" onClick={(event) => play(event)}>
-                                        <img src="/Shuffle.png" alt="Shuffle Icon" title="Shuffle"></img>
+                                        <img src="Shuffle.png" alt="Shuffle Icon" title="Shuffle"></img>
                                     </div>) : ('')
                                 }
 
                                 {props.playlists.videoTitles.filter(Boolean).length > 0 ? (
                                     <div className="play" onClick={() => play()}>
-                                        <img src="/Play.png" alt="Play Icon" title="Play"></img>
+                                        <img src="Play.png" alt="Play Icon" title="Play"></img>
                                     </div>) : ('')
                                 }
                                 

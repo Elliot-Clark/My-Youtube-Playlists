@@ -91,7 +91,11 @@ class App extends Component {
     .then(() => {
       axios.put("user-data/User" + this.state.userId + "/Playlists" + (this.state.numberOfPlaylists + 1) + ".json", defaultUserPlaylistData)
       .then(() => {
-        this.setState({ playlistCount: this.state.numberOfPlaylists += 1 }, () => {
+        let ele = this.state.numberOfPlaylists + 1;
+        this.setState({ 
+          playlistCount: ele, 
+          numberOfPlaylists: ele
+        }, () => {
           this.togglePlaylistCount("new playlist");
         });
       })

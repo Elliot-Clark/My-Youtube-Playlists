@@ -14,7 +14,7 @@ Other than the normal 'npm install' and 'npm start':
 1. Rename '.envExample' to '.env'. 
 2. Inside of .env paste your API and OAuth keys in the specificed areas, both of which you can get for free from the Google Developers Console website. The API key enables the YouTube search function, while the OAuth enable Google sign in to your presaved playlists.
 
-Alternatively, this app can be used on my own website:
+Alternatively, this app can be used on my own website: http://elliot-clark.com/MyYouTubePlaylists/index.html
 Do note, it is made using the free API key, so the amount of searches you can perform in one day is limited to 100. Playing videos from your playlists, however, do not require API key usage and can be done as many times as you wish.
 
 ## Usage:

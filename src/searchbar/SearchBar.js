@@ -84,9 +84,9 @@ class SearchBar extends Component {
 
           <img 
             id="siteLogo"
-            src="/My-Youtube-Playlists.png" 
-            onMouseOver={ele => (ele.currentTarget.src = "/My-Youtube-Playlists.gif")} 
-            onMouseOut={ele => (ele.currentTarget.src = "/My-Youtube-Playlists.png")} 
+            src="My-Youtube-Playlists.png"
+            onMouseOver={ele => (ele.currentTarget.src = "My-Youtube-Playlists.gif")} 
+            onMouseOut={ele => (ele.currentTarget.src = "My-Youtube-Playlists.png")} 
             alt="My Youtube Playlists Logo">
           </img>
 
